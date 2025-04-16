@@ -1,0 +1,31 @@
+Date de séance : 16/04/2025
+
+Membres présents :
+- RENAND Baptiste
+- SOLDAN Maxens
+- BERCIER Thomas
+- DEGOUEY Corentin
+
+
+Travail fait depuis la séance précédente :
+- Description :
+    - Réfléction et mise en place de la structure du projet
+- Objectifs atteints :
+    - [Liste des objectifs atteints]
+- Répartition :
+    - [Nom du membre 1] : [Tâches réalisées]
+    - [Nom du membre 2] : [Tâches réalisées]
+    - [Nom du membre 3] : [Tâches réalisées]
+
+Problèmes rencontrés :
+- [Description des problèmes rencontrés]
+
+Pistes de solutions :
+- [Description des solutions envisagées]
+
+Travail à faire pour la prochaine séance :
+- [Liste des tâches à réaliser]
+- Répartition prévue :
+    - [Nom du membre 1] : [Tâches prévues]
+    - [Nom du membre 2] : [Tâches prévues]
+    - [Nom du membre 3] : [Tâches prévues]
