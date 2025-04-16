@@ -10,22 +10,12 @@ Membres présents :
 Travail fait depuis la séance précédente :
 - Description :
     - Réfléction et mise en place de la structure du projet
-- Objectifs atteints :
-    - [Liste des objectifs atteints]
-- Répartition :
-    - [Nom du membre 1] : [Tâches réalisées]
-    - [Nom du membre 2] : [Tâches réalisées]
-    - [Nom du membre 3] : [Tâches réalisées]
-
-Problèmes rencontrés :
-- [Description des problèmes rencontrés]
-
-Pistes de solutions :
-- [Description des solutions envisagées]
+    - Script lancement server MongoDB
 
 Travail à faire pour la prochaine séance :
-- [Liste des tâches à réaliser]
-- Répartition prévue :
-    - [Nom du membre 1] : [Tâches prévues]
-    - [Nom du membre 2] : [Tâches prévues]
-    - [Nom du membre 3] : [Tâches prévues]
+
+    - Création de l'API
+    - Site web front
+    - Création server Redis
+
+pas de problèmes rencontrés
