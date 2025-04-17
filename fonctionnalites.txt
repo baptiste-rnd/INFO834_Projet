@@ -1,6 +1,6 @@
 serveur redis: connexions, utilisateurs en ligne
 mongo: 
-utilisateur :id,nom,prenom, mot de passe, 
+user :id,nom,prenom, mot de passe, 
 message :id,contenu, auteur, conversation, date_heure
-conversation: id,owner, liste membre
+conversation: id,owner(id.membre), liste membre(id.membre)
 

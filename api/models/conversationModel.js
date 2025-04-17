@@ -8,6 +8,11 @@ const ConversationSchema = new Schema({
         required: true,
         auto: true
     },
+    titre: {
+        type: String,
+        required: true,
+        trim: true
+    },
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -22,3 +27,4 @@ const ConversationSchema = new Schema({
 });
 
 module.exports = mongoose.model('Conversation', ConversationSchema);
+

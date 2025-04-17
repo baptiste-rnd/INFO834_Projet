@@ -26,7 +26,13 @@ exports.getMessageById = async (req, res) => {
 // Créer un nouveau message
 exports.createMessage = async (req, res) => {
     try {
-        const newMessage = new Message(req.body);
+        const { author, content, conversationId } = req.body;
+
+        if (!author || !content || !conversationId) {
+            return res.status(400).json({ error: 'Author, content, and conversationId are required' });
+        }
+
+        const newMessage = new Message({ author, content, conversationId });
         const savedMessage = await newMessage.save();
         res.status(201).json(savedMessage);
     } catch (error) {
@@ -55,6 +61,18 @@ exports.deleteMessage = async (req, res) => {
             return res.status(404).json({ error: 'Message not found' });
         }
         res.status(200).json({ message: 'Message deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+// Récupérer tous les messages par ID de conversation
+exports.getMessagesByConversationId = async (req, res) => {
+    try {
+        const messages = await Message.find({ conversationId: req.params.conversationId });
+        if (!messages || messages.length === 0) {
+            return res.status(404).json({ error: 'No messages found for this conversation' });
+        }
+        res.status(200).json(messages);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

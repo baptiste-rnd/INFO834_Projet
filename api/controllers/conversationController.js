@@ -3,13 +3,17 @@ const Conversation = require('../models/conversationModel');
 // Create a new conversation
 exports.createConversation = async (req, res) => {
     try {
-        const { participants } = req.body;
+        const { participants, title } = req.body;
 
         if (!participants || participants.length < 2) {
             return res.status(400).json({ message: 'At least two participants are required.' });
         }
 
-        const newConversation = new Conversation({ participants });
+        if (!title || typeof title !== 'string') {
+            return res.status(400).json({ message: 'A valid title is required.' });
+        }
+
+        const newConversation = new Conversation({ participants, title });
         const savedConversation = await newConversation.save();
 
         res.status(201).json(savedConversation);
