@@ -1,11 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Messagerie</title>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+  <div class="main-container">
     
+    <aside class="sidebar">
+        <div class="user_info" id="user-info"></div>
+        <div class="conversation">
+            <h2>Conversations</h2>
+            <ul id="conversation-list"></ul>
+        </div>
+        <div class="logout-container">
+            <button id="logout-button">Déconnexion</button>
+        </div>
+    </aside>
+
+    <section class="content">
+      
+      <div class="users-bar">
+        <h3>Utilisateurs connectés</h3>
+        <div id="users-list"></div>
+      </div>
+
+      
+      <div class="conversation-detail">
+        <h3 id="conversation-title">Sélectionnez une conversation</h3>
+        <div id="messages-container"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="assets/js/script.js"></script>
 </body>
 </html>

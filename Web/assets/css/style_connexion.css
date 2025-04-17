@@ -1,11 +1,22 @@
+:root {
+    --main-blue: #2c5ea0;
+  }
 body {
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
+    background-image: url('../img/background_connexion.jpg  ');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    backdrop-filter: blur(2px);
+  }
+  
+  .main_container {
+    width: 320px;
   }
   
   .login-form {
@@ -13,40 +24,56 @@ body {
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    display: flex;
+    flex-direction: column;
   }
   
   .login-form h2 {
-    margin-bottom: 20px;
     text-align: center;
+    margin-bottom: 20px;
   }
   
   .login-form label {
-    display: block;
     margin-bottom: 5px;
     font-weight: bold;
   }
   
   .login-form input {
-    width: 100%;
-    padding: 8px;
     margin-bottom: 15px;
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 6px;
   }
   
   .login-form button {
-    width: 100%;
     padding: 10px;
-    background-color: #3359bb;
+    background-color: var(--main-blue);
     color: white;
     border: none;
     border-radius: 6px;
-    cursor: pointer;
     font-size: 16px;
+    cursor: pointer;
   }
   
   .login-form button:hover {
-    background-color: #45a049;
+    background-color: var(--main-blue);
+  }
+  
+  .toggle-link {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .toggle-link a {
+    color: var(--main-blue);
+    text-decoration: none;
+  }
+  
+  .toggle-link a:hover {
+    text-decoration: underline;
+  }
+  
+  .hidden {
+    display: none;
   }
   
