@@ -13,3 +13,15 @@ services:
     ports:
     - "6379:6379"
 
+  nodejs:
+    build:
+      context: .
+    container_name: nodejs_app
+    ports:
+    - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
+
