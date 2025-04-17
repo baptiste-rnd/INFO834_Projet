@@ -1,0 +1,22 @@
+Date de séance : 17/04/2025
+
+Membres présents :
+- RENAND Baptiste
+- SOLDAN Maxens
+- BERCIER Thomas
+- DEGOUEY Corentin
+
+Travail fait depuis la séance précédente :
+- Description :
+    - Réfléction de la structure des bases de données
+    - Commencement du dévelopemment des différentes parties du projet (front, api, docker)
+
+Répartition du travail :
+ - DEGOUEY Corentin : Création des différentes pages web (login, main)
+ - BERCIER Thomas : Création des différentes routes de l'API NodeJS
+ - SOLDAN Maxens & RENAND Baptiste : Création du docker contenant MongoDB, Redis & l'API
+
+Travail à faire pour la prochaine séance :
+    - ?????????????
+
+Pas de problèmes rencontrés
