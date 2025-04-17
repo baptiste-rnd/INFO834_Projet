@@ -3,26 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page de Connexion</title>
+  <title>Connexion / Création de compte</title>
   <link rel="stylesheet" href="assets/css/style_connexion.css">
+  
 </head>
 <body>
-  <form class="login-form" action="#" method="post">
-    <h2>Connexion</h2>
+  <div class="main_container">
+    <form class="login-form" id="login-form" action="#" method="post">
+      <h2>Connexion</h2>
 
-    <label for="username">Utilisateur</label>
-    <input type="text" id="username" name="username" required>
+      <label for="login-username">Utilisateur</label>
+      <input type="text" id="login-username" name="username" required>
 
-    <label for="nom">Nom</label>
-    <input type="text" id="nom" name="nom" required>
+      <label for="login-password">Mot de passe</label>
+      <input type="password" id="login-password" name="password" required>
 
-    <label for="prenom">Prénom</label>
-    <input type="text" id="prenom" name="prenom" required>
+      <button type="submit" id="login-button">Se connecter</button>
 
-    <label for="password">Mot de passe</label>
-    <input type="password" id="password" name="password" required>
+      <p class="toggle-link">Pas encore de compte ? <a href="#" onclick="toggleForms()">Créer un compte</a></p>
+    </form>
 
-    <button type="submit">Se connecter</button>
-  </form>
+
+    <form class="login-form hidden" id="register-form" action="#" method="post">
+      <h2>Créer un compte</h2>
+
+      <label for="register-username">Nom d'utilisateur</label>
+      <input type="text" id="register-username" name="username" required>
+
+      <label for="register-nom">Nom</label>
+      <input type="text" id="register-nom" name="nom" required>
+
+      <label for="register-prenom">Prénom</label>
+      <input type="text" id="register-prenom" name="prenom" required>
+
+      <label for="register-password">Mot de passe</label>
+      <input type="password" id="register-password" name="password" required>
+
+      <label for="verif-register-password">Vérifier le mot de passe</label>
+      <input type="password" id="verif-register-password" name="verif-password" required>
+
+      <button type="submit" id="register-button">Créer le compte</button>
+
+      <p class="toggle-link">Déjà inscrit ? <a href="#" onclick="toggleForms()">Se connecter</a></p>
+    </form>
+
+  </div>
+
+  <script src="assets/js/script_connexion.js"></script>
 </body>
 </html>
