@@ -1,17 +1,20 @@
-FROM node:18
+# Utiliser l'image officielle de Node.js comme image de base
+FROM node:16
 
-# Create app directory
+# Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Install app dependencies
+# Copier le fichier package.json et package-lock.json (s'il existe) dans le conteneur
 COPY package*.json ./
+
+# Installer les dépendances
 RUN npm install
 
-# Copy the rest of the application code into the container at /app
+# Copier tous les fichiers du projet dans le conteneur
 COPY . .
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
+# Exposer le port sur lequel l'application écoute (par défaut Express écoute sur le port 3000)
+EXPOSE 3000
 
-# Run app.py when the container launches
+# Définir la commande pour démarrer l'application
 CMD ["npm", "start"]
