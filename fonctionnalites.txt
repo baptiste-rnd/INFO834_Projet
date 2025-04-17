@@ -1,0 +1,6 @@
+serveur redis: connexions, utilisateurs en ligne
+mongo: 
+utilisateur :id,nom,prenom, mot de passe, 
+message :id,contenu, auteur, conversation, date_heure
+conversation: id,owner, liste membre
+
