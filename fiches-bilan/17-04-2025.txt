@@ -17,6 +17,10 @@ Répartition du travail :
  - SOLDAN Maxens & RENAND Baptiste : Création du docker contenant MongoDB, Redis & l'API
 
 Travail à faire pour la prochaine séance :
-    - ?????????????
+    - Mettre sur docker l'api
+    - Ajouter des fonctionnalité pour la communication API/web
+    - Creer l'api pour le serveur Redis
+    - Effectuer des tests pour verifier que tout ce qui a été implemanté ce jour fonctionne
+    - BrainStorming sur les potentiels nouvelles fonctionnalités
 
 Pas de problèmes rencontrés
