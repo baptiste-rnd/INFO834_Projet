@@ -208,24 +208,34 @@ h2{
   flex-direction: column;
 }
 .message-texte{
+  max-width: 70%; 
   width:fit-content;
   background-color: #353a3f;
   border-radius:0.4rem ;
   padding: 0.3rem;
+  word-wrap: break-word;         
+  overflow-wrap: break-word;
+  white-space: pre-wrap;  
 }
 
 .message p{
   color:white;
 }
 
-.message-texte-own{
-  width:fit-content;
+.message-texte-own {
+  max-width: 70%;                
+  width: fit-content;
   background-color: #1365b6;
-  border-radius:0.4rem ;
+  border-radius: 0.4rem;
   padding: 0.3rem;
+  color: white;
+  word-wrap: break-word;         
+  overflow-wrap: break-word;
+  white-space: pre-wrap;         
 }
 .message-own{
   margin-right:15px;
+  margin-bottom: 15px;
   display: flex;
   justify-content: flex-end;
 }
