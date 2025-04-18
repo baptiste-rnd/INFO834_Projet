@@ -8,8 +8,30 @@
 <body>
   <div class="main-container">
     
+    <div id="settings-panel" class="settings-panel hidden">
+      <span id="close-settings" class="close-btn">&times;</span>
+
+      <h3>Modifier le profil</h3>
+      <label for="input-nom">Nom</label>
+      <input type="text" id="input-nom" placeholder="Votre nom">
+      
+      <label for="input-prenom">Prénom</label>
+      <input type="text" id="input-prenom" placeholder="Votre prénom">
+      
+      <label for="input-username">Username</label>
+      <input type="text" id="input-username" placeholder="Nom d'utilisateur">
+    
+      <button id="save-settings">Valider</button>
+    </div>
+
     <aside class="sidebar">
-        <div class="user_info" id="user-info"></div>
+        <div class="user-info" id="user-info">
+          <div class="user-info-texte" id="user-info-texte">
+          </div>
+          <button id="toggle-settings" class="settings-button">
+            <img src="assets/img/edit.png" alt="Paramètres" />
+          </button>
+        </div>
         <div class="conversation">
             <h2>Conversations</h2>
             <ul id="conversation-list"></ul>
@@ -29,7 +51,17 @@
       
       <div class="conversation-detail">
         <h3 id="conversation-title">Sélectionnez une conversation</h3>
-        <div id="messages-container"></div>
+        <div class="messages-container" id="messages-container"></div>
+        <div class="input-wrapper hidden" id="input-wrapper">
+          <input
+            type="text"
+            id="write-bar"
+            name="write-bar"
+            placeholder="Écrivez un message..."
+            class="write-bar"
+          />
+          <button class="send-button" id="send-button">Envoyer</button>
+        </div>        
       </div>
     </section>
   </div>
