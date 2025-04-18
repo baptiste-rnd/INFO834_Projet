@@ -22,12 +22,15 @@ const inputWrapper = document.getElementById("input-wrapper");
 const input = document.getElementById("write-bar");
 const sendButton = document.getElementById("send-button");
 
+// Variable pour garder une référence de la conversation active
+let activeConversation = null;
+
 // Remplir les conversations
 const conversationList = document.getElementById("conversation-list");
 conversations.forEach(conv => {
     const li = document.createElement("li");
     li.textContent = conv.title;
-    li.onclick = () => showConversation(conv);
+    li.onclick = () => showConversation(conv); // Afficher la conversation lorsque cliquée
     conversationList.appendChild(li);
 });
 
@@ -41,7 +44,9 @@ connectedUsers.forEach(user => {
 
 // Afficher une conversation
 function showConversation(conversation) {
-        
+    // Mettre à jour la conversation active
+    activeConversation = conversation;
+
     // Afficher le champ de saisie et le bouton "Envoyer" uniquement pour cette conversation
     inputWrapper.classList.remove("hidden");
 
@@ -62,15 +67,17 @@ function showConversation(conversation) {
     participants.forEach((name, index) => {
         userColors[name] = predefinedColors[index % predefinedColors.length]; // Répète la palette si nécessaire
     });
+
+    // Afficher les messages
     conversation.messages.forEach(msg => {
         const msgDiv = document.createElement("div");
         const msgDiv_texte = document.createElement("div");
         const senderColor = userColors[msg.sender] || "#3498db"; // Défaut si non trouvé
-        if (msg.sender==user.nom){
+        if (msg.sender == user.nom) {
             msgDiv.classList.add("message-own");
             msgDiv_texte.classList.add("message-texte-own");
-            msgDiv_texte.innerHTML = `<p><strong> Moi</strong></p><p>${msg.text}</p>`;        }
-        else{
+            msgDiv_texte.innerHTML = `<p><strong> Moi</strong></p><p>${msg.text}</p>`;
+        } else {
             msgDiv.classList.add("message");
             msgDiv_texte.classList.add("message-texte");
             msgDiv_texte.innerHTML = `<p><strong style="color: ${senderColor}">${msg.sender}</strong></p><p>${msg.text}</p>`;
@@ -80,35 +87,42 @@ function showConversation(conversation) {
         container.appendChild(msgDiv);
     });
 
+    // Ajouter un événement pour le bouton "Envoyer"
+    sendButton.removeEventListener("click", handleSendMessage); // Retirer les anciens événements
+    sendButton.addEventListener("click", handleSendMessage); // Ajouter un événement pour la conversation active
 
-    sendButton.removeEventListener("click", sendMessage); // Supprimer l'ancien événement
-    input.removeEventListener("keydown", sendMessageOnEnter); // Supprimer l'ancien événement
+    // Ajouter un événement pour la touche "Entrée"
+    input.removeEventListener("keydown", handleSendMessageOnEnter);
+    input.addEventListener("keydown", handleSendMessageOnEnter);
 
-    // Ajouter un nouvel événement pour le bouton "Envoyer"
-    console.log("la conversation est : ",conversation);
-    sendButton.addEventListener("click", () => sendMessage(conversation, input));
+    // Fonction pour envoyer le message
+    function handleSendMessage() {
+        sendMessage(activeConversation, input);
+    }
 
-    // Ajouter un nouvel événement pour la touche "Entrée"
-    input.addEventListener("keydown", (e) => sendMessageOnEnter(e, conversation, input));
+    // Fonction pour envoyer le message avec "Enter"
+    function handleSendMessageOnEnter(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessage(activeConversation, input);
+        }
+    }
 
-    setTimeout(() => { scrollToBottom();  }, 0);
-
+    // S'assurer que l'écran défile en bas
+    setTimeout(() => { scrollToBottom(); }, 0);
 }
 
 // Fonction pour envoyer un message
 function sendMessage(conversation, input) {
-    
     const messageText = input.value.trim();
     if (messageText !== "") {
         conversation.messages.push({
             sender: user.nom,
             text: messageText
         });
-        console.log("le message est envoyé a la conversation  : ",conversation);
-        // Optionnel : envoyer à l'API
-        // await fetch("/api/sendMessage", { ... });
+        console.log("Le message est envoyé à la conversation : ", conversation);
 
-        // Rafraîchir la vue de la conversation
+        // Rafraîchir la vue de la conversation active
         showConversation(conversation);
 
         // Vider l'input
@@ -116,14 +130,7 @@ function sendMessage(conversation, input) {
     }
 }
 
-// Fonction pour envoyer un message avec "Enter"
-function sendMessageOnEnter(e, conversation, input) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        sendMessage(conversation, input);
-    }
-}
-
+// Fonction pour faire défiler jusqu'en bas
 function scrollToBottom() {
     const container = document.getElementById("messages-container");
     container.scrollTop = container.scrollHeight;
@@ -133,7 +140,7 @@ const user = {
     prenom: "AD",
     nom: "Laurent",
     photo: "assets/img/profil.jpg",
-    username:"pupuce"
+    username: "pupuce"
 };
 
 function display_user_info(){
@@ -175,12 +182,9 @@ document.getElementById("save-settings").addEventListener("click", () => {
     // TODO : envoyer à l'API ou mettre à jour l'objet `user`
     document.getElementById("settings-panel").classList.add("hidden");
 });
-  
 
 document.getElementById("logout-button").addEventListener("click", () => {
-    
     //appelle api
     // Simule une déconnexion
     window.location.href = 'connexion.html';
 });
-  
