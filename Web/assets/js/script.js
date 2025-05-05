@@ -77,9 +77,18 @@ conversations.forEach(conv => {
 // Remplir les utilisateurs connectés
 const usersList = document.getElementById("users-list");
 connectedUsers.forEach(user => {
+    const userContainer = document.createElement("div");
+    userContainer.classList.add("user-item");
+
     const span = document.createElement("span");
     span.textContent = user;
-    usersList.appendChild(span);
+
+    const onlineDot = document.createElement("span");
+    onlineDot.classList.add("online-dot");
+
+    userContainer.appendChild(span);
+    userContainer.appendChild(onlineDot);
+    usersList.appendChild(userContainer);
 });
 
 // Afficher une conversation

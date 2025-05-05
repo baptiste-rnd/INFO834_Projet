@@ -11,30 +11,6 @@
   box-sizing: border-box;
   font-family: "Outfit";
 }
-*{
-  scrollbar-width: thin;                /* Firefox /
-  scrollbar-color: rgba(255,255,255,0.3) transparent;  / Firefox */
-  }
-
-  *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background: transparent;
-  }
-
-  *::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-
-  *::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-
-  *::-webkit-scrollbar-track {
-    background: transparent;
-  }
 h2{
   margin-bottom: 1rem;
 }
@@ -43,6 +19,7 @@ h2{
   display: flex;
   height: 100vh;
 }
+
 
 /* Sidebar */
 .sidebar {
@@ -53,14 +30,10 @@ h2{
   overflow-y: auto;
   position:relative;
 }
-
-
-
 .sidebar ul {
   list-style: none;
   
 }
-
 .sidebar li {
   padding: 10px;
   border-bottom: 1px solid var(--border-color);
@@ -106,6 +79,7 @@ h2{
   height: 24px;
 }
 
+/* Settings panel */
 .settings-panel {
   position: absolute;
   top: 80px;
@@ -173,6 +147,7 @@ h2{
 #logout-button:hover {
   background-color:var(--light-blue);
 }
+
 
 /*Ajouter conversation */
 .conversation_title_add{
@@ -260,14 +235,28 @@ h2{
   gap: 10px;
 }
 
-#users-list span {
-  background-color: var(--main-blue);
-  color: white;
+
+
+.user-item {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
   padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 14px;
+  background-color: var(--main-blue);
+  border-radius: 25px;
+  color: white;
+  padding-left: 15px;
 }
 
+.online-dot {
+  position: absolute;
+  top: 11px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  background-color: #00c853; 
+  border-radius: 50%;
+}
 
 /* Conversation detail */
 
@@ -296,32 +285,23 @@ h2{
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
+ 
 }
-.message-texte{
+.message-texte, .message-texte-own{
   max-width: 70%; 
   width:fit-content;
   background-color: #353a3f;
   border-radius:0.4rem ;
-  padding: 0.3rem;
+  padding: 0.4rem;
   word-wrap: break-word;         
   overflow-wrap: break-word;
-  white-space: pre-wrap;  
-}
-
-.message p{
-  color:white;
+  white-space: pre-wrap; 
+  color:white; 
+  
 }
 
 .message-texte-own {
-  max-width: 70%;                
-  width: fit-content;
-  background-color: #1365b6;
-  border-radius: 0.4rem;
-  padding: 0.3rem;
-  color: white;
-  word-wrap: break-word;         
-  overflow-wrap: break-word;
-  white-space: pre-wrap;         
+  background-color: #1365b6;      
 }
 .message-own{
   margin-right:15px;
@@ -332,11 +312,6 @@ h2{
 .message-own strong {
   color: rgb(23, 175, 15);
 }
-.message-own p {
-  color:white;
-}
-
-
 
 .input-wrapper {
   position: absolute;
