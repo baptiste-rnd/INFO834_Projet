@@ -24,6 +24,22 @@
       <button id="save-settings">Valider</button>
     </div>
 
+    <div id="conversation-panel" class="conversation-panel hidden">
+      <span id="close-conversation" class="close-btn">&times;</span>
+
+      <h3>Créér une nouvelle conversation</h3>
+      <label for="input-nom">Nom</label>
+      <input type="text" id="input-nom" placeholder="Nom de la conversation">
+      
+      <label for="input-prenom">Description</label>
+      <input type="text" id="input-prenom" placeholder="Description de la conversation">
+      <label for="input-member">Sélectionnez les membres</label>
+      <div id="members-list" class="members-list">
+        <!-- Les utilisateurs seront injectés ici dynamiquement -->
+      </div>
+      <button id="save-conversation">Créér la conversation</button>
+    </div>
+
     <aside class="sidebar">
         <div class="user-info" id="user-info">
           <div class="user-info-texte" id="user-info-texte">
@@ -33,7 +49,12 @@
           </button>
         </div>
         <div class="conversation">
-            <h2>Conversations</h2>
+            <div class="conversation_title_add"> 
+              <h2>Conversations</h2>
+              <button id="toggle-conversation" class="new-conv-button">
+                <img src="assets/img/new_conv.png" alt="Paramètres" />
+              </button>
+            </div>
             <ul id="conversation-list"></ul>
         </div>
         <div class="logout-container">

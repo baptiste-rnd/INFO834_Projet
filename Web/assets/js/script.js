@@ -1,4 +1,10 @@
 // Données fictives
+const user = {
+    prenom: "AD",
+    nom: "Laurent",
+    photo: "assets/img/profil.jpg",
+    username: "pupuce"
+};
 const conversations = [
     { id: 1, title: "Projet A", messages: [
       { sender: "Alice", text: "Salut, on commence ?" },
@@ -18,6 +24,40 @@ const conversations = [
 ];
   
 const connectedUsers = ["Alice", "Bob", "Eve", "David"];
+const allUsers= [
+    {
+    prenom: "AD",
+    nom: "Laurent",
+    photo: "assets/img/profil.jpg",
+    username: "pupuce"
+    },
+    {
+        prenom: "Alice",
+        nom: "Lejeune",
+        photo: "assets/img/profil.jpg",
+        username: "louloute"
+    },
+    {
+        prenom: "Lelouche",
+        nom: "Bob",
+        photo: "assets/img/profil.jpg",
+        username: "pupuce"
+    },
+    {
+        prenom: "AD",
+        nom: "David",
+        photo: "assets/img/profil.jpg",
+        username: "pupuce"
+    },
+    {
+        prenom: "AD",
+        nom: "Eve",
+        photo: "assets/img/profil.jpg",
+        username: "pupuce"
+    }
+]
+
+//Conversation
 const inputWrapper = document.getElementById("input-wrapper");
 const input = document.getElementById("write-bar");
 const sendButton = document.getElementById("send-button");
@@ -136,12 +176,7 @@ function scrollToBottom() {
     container.scrollTop = container.scrollHeight;
 }
   
-const user = {
-    prenom: "AD",
-    nom: "Laurent",
-    photo: "assets/img/profil.jpg",
-    username: "pupuce"
-};
+
 
 function display_user_info(){
     const userInfoDiv = document.getElementById("user-info-texte");
@@ -153,8 +188,11 @@ function display_user_info(){
     `;
 }
 
+
+//Modifier les infos de l'utilisateur
 display_user_info();
 
+// Modifier le profil de l'utilisateur
 document.getElementById("toggle-settings").addEventListener("click", () => {
     document.getElementById("input-nom").value = user.nom;
     document.getElementById("input-prenom").value = user.prenom;
@@ -167,7 +205,7 @@ document.getElementById("close-settings").addEventListener("click", () => {
     document.getElementById("settings-panel").classList.add("hidden");
 });
 
-// Sauvegarde (exemple fictif)
+// Sauvegarde
 document.getElementById("save-settings").addEventListener("click", () => {
     const nom = document.getElementById("input-nom").value.trim();
     const prenom = document.getElementById("input-prenom").value.trim();
@@ -183,8 +221,52 @@ document.getElementById("save-settings").addEventListener("click", () => {
     document.getElementById("settings-panel").classList.add("hidden");
 });
 
+
+document.getElementById("toggle-conversation").addEventListener("click", () => {
+    const membersDiv = document.getElementById("members-list");
+    membersDiv.innerHTML = ""; // reset
+
+    //a remplacer par tous les users
+    allUsers.forEach(user => {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("member-item");
+        wrapper.innerHTML = `
+        <label>
+            <input type="checkbox" value="${user.username}">
+            ${user.prenom} ${user.nom}
+        </label>
+        `;
+        membersDiv.appendChild(wrapper);
+    });
+
+    document.getElementById("conversation-panel").classList.toggle("hidden");
+});
+
+// Fermer avec la croix
+document.getElementById("close-conversation").addEventListener("click", () => {
+    document.getElementById("conversation-panel").classList.add("hidden");
+});
+
+
+
+// Creer la conversation
+document.getElementById("save-conversation").addEventListener("click", () => {
+    const nom = document.getElementById("input-nom").value;
+    const description = document.getElementById("input-prenom").value;
+
+    const selectedIds = Array.from(
+        document.querySelectorAll("#members-list input[type='checkbox']:checked")
+    ).map(checkbox => parseInt(checkbox.value));
+
+    // TODO : envoyer à l'API ou mettre à jour l'objet `user`
+
+    document.getElementById("conversation-panel").classList.add("hidden");
+});
+
+
 document.getElementById("logout-button").addEventListener("click", () => {
     //appelle api
     // Simule une déconnexion
     window.location.href = 'connexion.html';
 });
+
