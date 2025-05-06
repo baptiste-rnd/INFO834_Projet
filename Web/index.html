@@ -40,7 +40,26 @@
       <button id="save-conversation">Créér la conversation</button>
     </div>
 
+    <div id="conv-settings-panel" class="settings-panel hidden">
+      <span id="close-conv-settings" class="close-btn">&times;</span>
+      <h3 id="conv-settings-title">Paramètres de la conversation</h3>
+    
+      <label for="conv-name">Nom</label>
+      <input type="text" id="conv-name" disabled>
+    
+      <label for="conv-description">Description</label>
+      <input type="text" id="conv-description" disabled>
+    
+      <div id="members-section">
+        <h4>Membres</h4>
+        <div id="members-list-edit-conv" class="members-checkbox-list"></div>
+      </div>
+      <button id="save-conv-settings" class="hidden">Enregistrer</button>
+
+    </div>
+    
     <aside class="sidebar">
+      <div id="first-part-siade-bar">
         <div class="user-info" id="user-info">
           <div class="user-info-texte" id="user-info-texte">
           </div>
@@ -57,9 +76,18 @@
             </div>
             <ul id="conversation-list"></ul>
         </div>
+      </div>
+      <div id="seconde-part-side-bar">
+        <div class="statistiques">
+          <div class="statistiques-title"> 
+            <h2>Statistiques</h2>
+          </div>
+          <ul id="statistiques-list"></ul>
+        </div>
         <div class="logout-container">
             <button id="logout-button">Déconnexion</button>
         </div>
+      </div>  
     </aside>
 
     <section class="content">
@@ -88,5 +116,6 @@
   </div>
 
   <script src="assets/js/script.js"></script>
+  
 </body>
 </html>
