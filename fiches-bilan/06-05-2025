@@ -1,0 +1,26 @@
+Date de séance : 06/05/2025
+
+Membres présents :
+RENAND Baptiste
+SOLDAN Maxens
+BERCIER Thomas
+DEGOUEY Corentin
+
+Travail réalisé lors de la séance :
+- Développement complet de l’API principale (Node.js) par Thomas, Baptiste et Maxens
+- Intégration de l’API dans le front-end par Corentin
+- Adaptation de l’environnement Docker pour permettre l’accès au front depuis l’API
+- Début du développement d’une API Redis pour récupérer les messages et les utilisateurs connectés
+
+Répartition des tâches :
+- BERCIER Thomas, RENAND Baptiste & SOLDAN Maxens : Développement de l’API Node.js et configuration Docker (MongoDB, Redis, API)
+- DEGOUEY Corentin : Intégration de l’API dans l’interface front-end (pages login et principale)
+
+Travail à réaliser pour la prochaine séance :
+- Finaliser l’intégration de l’API dans Docker
+- Ajouter des fonctionnalités pour améliorer la communication entre le front-end et l’API
+- Poursuivre et terminer l’API Redis (gestion des messages et des utilisateurs connectés)
+- Effectuer des tests pour valider le bon fonctionnement de l’ensemble
+- Brainstorming sur les potentielles nouvelles fonctionnalités à intégrer
+
+Problèmes rencontrés : Aucun pour le moment
