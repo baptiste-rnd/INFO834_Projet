@@ -14,12 +14,15 @@ services:
     - "6379:6379"
 
   nodejs:
-    build: .
+    build: 
+      context: ../api
     container_name: nodejs_app
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+    volumes:
+      - ../web:/app/public
     command: npm start
     depends_on:
       - db

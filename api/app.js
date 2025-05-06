@@ -15,19 +15,19 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Routes
+// Servir les fichiers statiques depuis /public
+app.use(express.static('public'));
+
+// Routes API
 app.use('/c', conversationRoutes);
 app.use('/m', messageRoutes);
 app.use('/u', userRoute);
 
+const uri = 'mongodb://root:password@db:27017/?authSource=admin';
 
-// MongoDB URI with authentication
-//const uri = `mongodb://${user}:${password}@${address}:27017/borne_restaurant?authMechanism=DEFAULT&authSource=admin`;
-
-// Connect to MongoDB
-// mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-//     .then(() => console.log('MongoDB connected'))
-//     .catch(err => console.error('Could not connect to MongoDB', err));
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('Could not connect to MongoDB', err));
 
 // Start the server
 app.listen(port, () => {
