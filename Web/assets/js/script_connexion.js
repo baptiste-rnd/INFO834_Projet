@@ -29,8 +29,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
         if (response.ok) {
             const data = await response.json();
-            const userId = data.id;  // Adapté à la structure de votre API
-
+            const userId = data.id; 
             // Enregistrer l'ID de l'utilisateur dans le localStorage
             localStorage.setItem('userId', userId);
             // Si OK, rediriger vers la page d'accueil

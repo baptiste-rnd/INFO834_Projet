@@ -18,23 +18,45 @@ socket.on('messageReceived', (message) => {
 /////////////////////////////////////    Utilisateur connecté Redis               /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const connectedUsers = ["Alice", "Bob", "Eve", "David"];
-// Remplir les utilisateurs connectés
-const usersList = document.getElementById("users-list");
-connectedUsers.forEach(user => {
-    const userContainer = document.createElement("div");
-    userContainer.classList.add("user-item");
+// Fonction pour récupérer les utilisateurs en ligne depuis l'API
+async function fetchOnlineUsers() {
+    try {
+        const response = await fetch('/u/online'); 
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+            displayOnlineUsers(data.onlineUsers);
+        } else {
+            console.error('Erreur API:', data.message);
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération des utilisateurs en ligne:', error);
+    }
+}
 
-    const span = document.createElement("span");
-    span.textContent = user;
+// Fonction pour afficher les utilisateurs dans le DOM
+function displayOnlineUsers(users) {
+    const usersList = document.getElementById("users-list");
+    usersList.innerHTML = ""; 
+    users.forEach(user => {
+        const userContainer = document.createElement("div");
+        userContainer.classList.add("user-item");
 
-    const onlineDot = document.createElement("span");
-    onlineDot.classList.add("online-dot");
+        const span = document.createElement("span");
+        span.textContent = user.username; 
 
-    userContainer.appendChild(onlineDot);
-    userContainer.appendChild(span);
-    usersList.appendChild(userContainer);
-});
+        const onlineDot = document.createElement("span");
+        onlineDot.classList.add("online-dot");
+
+        userContainer.appendChild(onlineDot);
+        userContainer.appendChild(span);
+        usersList.appendChild(userContainer);
+    });
+}
+
+// Appel initial au chargement de la page
+fetchOnlineUsers();
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,7 +298,7 @@ function getSenderNameById(auteurId) {
 // Afficher une conversation
 async function showConversation(conversation) {
     await getMessagesByConversation(conversation,conversation._id);
-    console.log(conversation.messages)
+    (conversation.messages)
 
     // Mettre à jour la conversation active
     activeConversation = conversation;
@@ -648,34 +670,94 @@ document.getElementById("close-conversation").addEventListener("click", () => {
 /////////////////////////////////////////////    Statistiques Redis            ////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function updateStats() {
+async function updateStats() {
     const list = document.getElementById("statistiques-list");
-    list.innerHTML = ""; // Réinitialiser la liste
+    list.innerHTML = "";
 
-    // Données fictives
-    const fakeData = {
-        most_connected: { username: "pupuce", time_connected: 8421 },
-        most_active: { username: "louloute", messages_sent: 134 },
-        least_active: { username: "bobi", messages_sent: 2 },
-        total_messages: 459
-    };
+    try {
+        const response = await fetch("/m");
+        if (!response.ok) throw new Error("Erreur lors de la récupération des messages");
 
-    // Remplissage du HTML
-    list.innerHTML = `
-        <li><strong>Utilisateur le plus connecté :</strong> ${fakeData.most_connected.username} (${formatDuration(fakeData.most_connected.time_connected)})</li>
-        <li><strong>Utilisateur le plus actif :</strong> ${fakeData.most_active.username} (${fakeData.most_active.messages_sent} messages)</li>
-        <li><strong>Utilisateur le moins actif :</strong> ${fakeData.least_active.username} (${fakeData.least_active.messages_sent} messages)</li>
-        <li><strong>Total des messages :</strong> ${fakeData.total_messages}</li>
-    `;
+        const messages = await response.json();
+
+        const messageCounts = {};
+        messages.forEach(msg => {
+            const auteur = msg.auteur;
+            messageCounts[auteur] = (messageCounts[auteur] || 0) + 1;
+        });
+
+        let maxUser = null, minUser = null;
+        let maxCount = -Infinity, minCount = Infinity;
+
+        for (const [userId, count] of Object.entries(messageCounts)) {
+            if (count > maxCount) {
+                maxCount = count;
+                maxUser = userId;
+            }
+            if (count < minCount) {
+                minCount = count;
+                minUser = userId;
+            }
+        }
+
+        const totalMessages = messages.length;
+
+        const mostActiveUsername = getSenderNameById(maxUser);
+        const leastActiveUsername = getSenderNameById(minUser);
+
+        // Remplissage du HTML avec les vraies stats
+        list.innerHTML = `
+            <li><strong>Utilisateur le plus actif :</strong> ${mostActiveUsername}</li>
+            <li><strong>Utilisateur le moins actif :</strong> ${leastActiveUsername}</li>
+            <li><strong>Total des messages :</strong> ${totalMessages}</li>
+        `;
+
+    } catch (error) {
+        console.error("Erreur dans updateStats :", error.message);
+        list.innerHTML = `<li>Erreur lors du chargement des statistiques.</li>`;
+    }
+}
+async function fetchAverageConnectionTime(userId) {
+    try {
+        const response = await fetch(`/u/stats/average/${userId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+            const durationMs = data.average;
+            const formatted = formatDuration(durationMs);
+            const list = document.getElementById("statistiques-list");
+            // Créer un élément de liste
+            const item = document.createElement("li");
+            item.classList.add("stat-item");
+
+            // Ajouter le texte avec le temps moyen en gras
+            item.innerHTML = `<strong> Mon temps moyen de connexion : </strong>${formatted}`;
+
+            list.appendChild(item);
+
+            
+        } else {
+            console.error('Erreur API :', data.message);
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération du temps moyen de connexion :', error);
+    }
 }
 
-// Fonction pour formater une durée en hh:mm:ss
-function formatDuration(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${h}h ${m}m ${s}s`;
+function formatDuration(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    if (minutes > 0) {
+        return `${minutes} min ${seconds} s`;
+    } else {
+        return `${seconds} s`;
+    }
 }
+
+
+  
 
 
 document.getElementById("logout-button").addEventListener("click", async () => {
@@ -703,7 +785,7 @@ document.getElementById("logout-button").addEventListener("click", async () => {
 });
 
 updateStats();
-
+fetchAverageConnectionTime(userId);
 
 
 
