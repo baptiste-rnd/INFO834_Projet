@@ -1,3 +1,10 @@
+// Vérifie si l'utilisateur est connecté
+const userId = localStorage.getItem('userId');
+
+if (!userId) {
+    // Si aucun userId, redirige vers la page de connexion
+    window.location.href = 'connexion.html';
+}
 // const conversations = [
 //     { id: 1,owner:"pupuce", title: "Projet A",members:["pupuce","louloute","davdav"], messages: [
 //       { sender: "Alice", text: "Salut, on commence ?" },
@@ -20,7 +27,6 @@ const connectedUsers = ["Alice", "Bob", "Eve", "David"];
 
 
 //Récupération des infos de l'utilisateurs.
-const userId = localStorage.getItem("userId");
 let user={};
 
 async function getUserInfo() {
@@ -381,19 +387,19 @@ function openConversationSettings(conv) {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.value = u.username;
-
+    
         if (isChecked) {
             checkbox.checked = true;
         }
         if (!isOwner) {
-            // Si non-owner, décocher interdit, cocher interdit
             checkbox.disabled = true;
         }
-
+    
         const label = document.createElement("label");
+        label.classList.add("member-label");
         label.appendChild(checkbox);
         label.append(` ${u.prenom} ${u.nom}`);
-
+    
         wrapper.appendChild(label);
         membersList.appendChild(wrapper);
     });
