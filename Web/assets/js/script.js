@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Vérifie si l'utilisateur est connecté
 const userId = localStorage.getItem('userId');
 
@@ -6,18 +5,6 @@ if (!userId) {
     // Si aucun userId, redirige vers la page de connexion
     window.location.href = 'connexion.html';
 }
-
-const conversations = [
-    { id: 1,owner:"pupuce", title: "Projet A",members:["pupuce","louloute","davdav"], messages: [
-      { sender: "Alice", text: "Salut, on commence ?" },
-      { sender: "Bob", text: "Oui, go !" },
-      { sender: "Alice", text: "Ca va ou quoi " },
-      { sender: "Alice", text: " t'as snap?" },
-      { sender: "Bob", text: "Chui marié" },
-      { sender: "Thomas", text: " t'as snap?" },
-      { sender: "Baptiste", text: " t'as snap?" },
-      { sender: "Bob", text: "Vos gueules" },
-=======
 // const conversations = [
 //     { id: 1,owner:"pupuce", title: "Projet A",members:["pupuce","louloute","davdav"], messages: [
 //       { sender: "Alice", text: "Salut, on commence ?" },
@@ -28,7 +15,6 @@ const conversations = [
 //       { sender: "Thomas", text: " t'as snap?" },
 //       { sender: "Baptiste", text: " t'as snap?" },
 //       { sender: "Bob", text: "Vos gueules" },
->>>>>>> ede1327de08fc7a30cbf2618029349fa07a639f4
 
 //     ]},
 //     { id: 2, owner:"louloute",title: "Equipe Tech",members:["evele","louloute","davdav"], messages: [
