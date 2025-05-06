@@ -8,31 +8,42 @@ function toggleForms() {
 document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault(); 
 
-    
     const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
+    const motDePasse = document.getElementById('login-password').value;  // Utiliser motDePasse
 
-    // try {
-    //   // Appel à l'API
-    //   const response = await fetch('https://ton-api.com/login', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ username, password })
-    //   });
+    try {
+        // Appel à l'API sur localhost
+        const response = await fetch('http://localhost:3000/u/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, motDePasse })  // Changer password en motDePasse
+        });
 
-    //   if (response.ok) {
-    //     // Si OK, rediriger
-    //     window.location.href = 'index.html';
-    //   } else {
-    //     // Sinon afficher erreur
-    //     const data = await response.json();
-    //     showError(data.message || "Identifiants incorrects.");
-    //   }
-    // } catch (error) {
-    //   showError("Erreur de connexion au serveur.");
-    // }
-    window.location.href = 'index.html';
+        if (response.ok) {
+            const data = await response.json();
+            const userId = data.id;  // Adapté à la structure de votre API
+
+            // Enregistrer l'ID de l'utilisateur dans le localStorage
+            localStorage.setItem('userId', userId);
+            // Si OK, rediriger vers la page d'accueil
+            window.location.href = 'index.html';
+        } else {
+            // Sinon afficher erreur
+            const data = await response.json();
+            showError(data.message || "Identifiants incorrects.");
+        }
+    } catch (error) {
+        showError("Erreur de connexion au serveur.");
+    }
 });
+
+function showError(message) {
+    // Affichage du message d'erreur
+    const errorElement = document.getElementById('error-message');
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+}
+
 
 document.getElementById('register-form').addEventListener('submit', async function(e) {
     e.preventDefault(); 
@@ -42,54 +53,35 @@ document.getElementById('register-form').addEventListener('submit', async functi
     const nom= document.getElementById('register-nom').value;
     const prenom =document.getElementById('register-prenom').value;
     const verif_password =document.getElementById('verif-register-password').value;
-    const password = document.getElementById('register-password').value;
+    const motDePasse = document.getElementById('register-password').value;
     
-    if (verif_password==password){
-        //try {
-        //   // Appel à l'API
-        //   const response = await fetch('https://ton-api.com/login', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ username, nom, prenom, password })
-        //   });
+    if (verif_password==motDePasse){
+        try {
+            // Appel à l'API pour créer un nouvel utilisateur
+            const response = await fetch('http://localhost:3000/u/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, motDePasse, nom, prenom })  // Vous pouvez ajouter d'autres champs ici
+            });
     
-        //   if (response.ok) {
-        //     // Si OK, rediriger
-        //     window.location.href = 'index.html';
-        //   } else {
-        //     // Sinon afficher erreur
-        //     const data = await response.json();
-        //     showError(data.message || "Identifiants incorrects.");
-        //   }
-        // } catch (error) {
-        //   showError("Erreur de connexion au serveur.");
-        // }
-        window.location.href = 'index.html';
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Utilisateur créé avec succès:', data);
+                alert('Utilisateur créé avec succès');
+                // Rediriger vers la page de connexion ou autre page après la création
+                window.location.href = 'connexion.html';
+            } else {
+                const data = await response.json();
+                showError(data.message || 'Erreur lors de la création de l\'utilisateur.');
+            }
+        } catch (error) {
+            showError('Erreur de connexion au serveur.');
+        }
 
     }
     else{
         showError("Les mots de passe ne correspondent pas!", "register");
     }
-
-    // try {
-    //   // Appel à l'API
-    //   const response = await fetch('https://ton-api.com/login', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ username, password })
-    //   });
-
-    //   if (response.ok) {
-    //     // Si OK, rediriger
-    //     window.location.href = 'index.html';
-    //   } else {
-    //     // Sinon afficher erreur
-    //     const data = await response.json();
-    //     showError(data.message || "Identifiants incorrects.");
-    //   }
-    // } catch (error) {
-    //   showError("Erreur de connexion au serveur.");
-    // }
     
 });
 

@@ -474,7 +474,11 @@ document.getElementById("logout-button").addEventListener("click", () => {
     //appelle api redis
     // Simule une déconnexion
     localStorage.removeItem("userId");
-    window.location.href = 'connexion.html';
+    if (!localStorage.getItem("userId")) {
+        window.location.href = 'connexion.html';
+    } else {
+        console.error("Échec de la suppression du userId.");
+    }
 });
 
 updateStats();
