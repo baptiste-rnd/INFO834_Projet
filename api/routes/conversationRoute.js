@@ -1,6 +1,6 @@
 // Importation des modules nécessaires
 import express from 'express';
-import {createConversation,getUserConversations,getConversationDetails,updateConversation,removeParticipant} from '../controllers/conversationController.js';
+import {createConversation,getUserConversations,getConversationDetails,updateConversation,removeParticipant,getConversationById} from '../controllers/conversationController.js';
 
 const router = express.Router();
 
@@ -9,6 +9,9 @@ router.post('/create', createConversation);
 
 // Route pour récupérer toutes les conversations d'un utilisateur
 router.get('/getConvUser/:userId', getUserConversations);
+
+// Route pour récupérer toutes les conversations d'un utilisateur
+router.get('/:id', getConversationById);
 
 // Route pour récupérer une conversation spécifique
 router.get('/details:conversationId', getConversationDetails);

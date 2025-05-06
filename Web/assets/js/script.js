@@ -8,10 +8,24 @@ if (!userId) {
 
 const socket = io();
 // Réception d'un message en temps réel
-socket.on('messageReceived', (message) => {
-    console.log('Nouveau message reçu:', message);
-    afficherMessage(message);
+socket.on('messageReceived', async (message) => {  // Ajoute async ici
+    try {
+        const conversation = await fetchConversationById(message.conversation);  // Utilise await pour attendre la réponse
+        if (conversation) {
+            showConversation(conversation);  // Passe la conversation à la fonction
+        } else {
+            console.error('Conversation non trouvée');
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération de la conversation:', error);
+    }
 });
+
+async function fetchConversationById(conversationId) {
+    const response = await fetch(`/c/${conversationId}`);
+    const data = await response.json();
+    return data;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
