@@ -3,11 +3,6 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ConversationSchema = new Schema({
-    id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        auto: true
-    },
     titre: {
         type: String,
         required: true,
