@@ -81,9 +81,10 @@ export const loginUser = async (req, res) => {
             return res.status(401).json({ message: 'username ou mot de passe incorrect' });
         }
 
-        // Enregistrer dans Redis
-        const dateConnexion = new Date().toISOString();
-        await redisClient.set(`login:${user._id}`, dateConnexion);
+        const now = Date.now();
+        await redisClient.set(`login:${user._id}`, now); // pour savoir qu'il est connecté
+        await redisClient.set(`login:start:${user._id}`, now); // pour mesurer le temps
+
 
         res.status(200).json({ success: true, id: user._id });
     } catch (error) {
@@ -100,11 +101,63 @@ export const logoutUser = async (req, res) => {
             return res.status(401).json();
         }
 
-        // Supprimer dans Redis
+        const start = await redisClient.get(`login:start:${userId}`);
+        if (start) {
+            const now = Date.now();
+            const duration = now - parseInt(start); // durée en ms
+
+            // Ajouter à la somme cumulée
+            await redisClient.incrBy(`stats:totalTime:${userId}`, duration);
+
+            // Incrémenter le nombre de sessions
+            await redisClient.incr(`stats:sessions:${userId}`);
+        }
+
+        // Nettoyage
         await redisClient.del(`login:${userId}`);
+        await redisClient.del(`login:start:${userId}`);
 
         res.status(200).json({ success: true });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la tentative de déconnexion', error });
+    }
+};
+
+export const getOnlineUsers = async (req, res) => {
+    try {
+        // Récupérer toutes les clés de type "login:<userId>"
+        const keys = await redisClient.keys('login:*');
+
+        // Filtrer les clés pour ne garder que celles des utilisateurs connectés
+        const userIds = keys
+            .filter(key => !key.includes('start')) // Exclure les clés "login:start"
+            .map(key => key.split(':')[1]); // Extraire les userIds
+
+        // Récupérer les infos des utilisateurs depuis MongoDB
+        const users = await User.find({ _id: { $in: userIds } }, { motDePasse: 0 });
+
+        res.status(200).json({ onlineUsers: users });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs en ligne', error });
+    }
+};
+
+
+export const getAverageConnectionTime = async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        const totalTime = await redisClient.get(`stats:totalTime:${userId}`);
+        const sessionCount = await redisClient.get(`stats:sessions:${userId}`);
+
+        if (!totalTime || !sessionCount || sessionCount === '0') {
+            return res.status(200).json({ average: 0, unit: 'milliseconds' });
+        }
+
+        const average = parseInt(totalTime) / parseInt(sessionCount);
+
+        res.status(200).json({ average, unit: 'milliseconds' });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors du calcul du temps moyen", error });
     }
 };
