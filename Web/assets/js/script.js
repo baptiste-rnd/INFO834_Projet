@@ -110,7 +110,7 @@ connectedUsers.forEach(user => {
 
     const onlineDot = document.createElement("span");
     onlineDot.classList.add("online-dot");
-    
+
     userContainer.appendChild(onlineDot);
     userContainer.appendChild(span);
     usersList.appendChild(userContainer);
@@ -416,3 +416,54 @@ document.getElementById("logout-button").addEventListener("click", () => {
 });
 
 updateStats();
+
+
+
+
+
+
+function makeDraggable(panelId) {
+    const panel = document.getElementById(panelId);
+    let isDragging = false;
+    let offsetX, offsetY;
+  
+    panel.addEventListener('mousedown', startDrag);
+    panel.addEventListener('touchstart', startDrag, { passive: false });
+  
+    function startDrag(e) {
+      isDragging = true;
+      const rect = panel.getBoundingClientRect();
+      offsetX = (e.clientX || e.touches[0].clientX) - rect.left;
+      offsetY = (e.clientY || e.touches[0].clientY) - rect.top;
+  
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag, { passive: false });
+      document.addEventListener('mouseup', stopDrag);
+      document.addEventListener('touchend', stopDrag);
+    }
+  
+    function drag(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+  
+      const clientX = e.clientX || e.touches[0].clientX;
+      const clientY = e.clientY || e.touches[0].clientY;
+  
+      panel.style.left = `${clientX - offsetX}px`;
+      panel.style.top = `${clientY - offsetY}px`;
+    }
+  
+    function stopDrag() {
+      isDragging = false;
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+      document.removeEventListener('touchend', stopDrag);
+    }
+  }
+  
+  // Appelle la fonction pour rendre les panneaux déplaçables
+  makeDraggable("settings-panel");
+  makeDraggable("conversation-panel");
+  makeDraggable("conv-settings-panel");
+  
