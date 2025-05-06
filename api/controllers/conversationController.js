@@ -32,7 +32,7 @@ export const getUserConversations = async (req, res) => {
         const userId = req.params.userId;
 
         const conversations = await Conversation.find({
-            participants: { $in: [userId] }
+            listeMembres: { $in: [userId] }
         });
 
         res.status(200).json(conversations);
