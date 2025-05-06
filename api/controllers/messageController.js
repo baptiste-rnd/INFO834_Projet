@@ -68,7 +68,7 @@ export const deleteMessage = async (req, res) => {
 // Récupérer tous les messages par ID de conversation
 export const getMessagesByConversationId = async (req, res) => {
     try {
-        const messages = await Message.find({ conversationId: req.params.conversationId });
+        const messages = await Message.find({ conversationId: req.params.conversation });
         if (!messages || messages.length === 0) {
             return res.status(404).json({ error: 'No messages found for this conversation' });
         }

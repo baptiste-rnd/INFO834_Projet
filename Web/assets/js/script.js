@@ -223,22 +223,50 @@ connectedUsers.forEach(user => {
     usersList.appendChild(userContainer);
 });
 
+let messages = [];
+
+async function getMessagesByConversation(conversationId) {
+  try {
+    const response = await fetch(`http://localhost:3000/m/conversation/${conversationId}`);
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des messages");
+    }
+
+    const data = await response.json();
+
+    conversation.messages = data
+      .filter(msg => msg.conversation === conversationId)
+      .map(msg => ({
+        sender: getSenderNameById(msg.auteur),
+        text: msg.contenu
+    }));
+
+    console.log(messages);
+
+  } catch (error) {
+    console.error("Erreur :", error.message);
+  }
+}
+
 // Afficher une conversation
 function showConversation(conversation) {
+
+    getMessagesByConversation(conversation.id);
+    
     // Mettre à jour la conversation active
     activeConversation = conversation;
 
     // Afficher le champ de saisie et le bouton "Envoyer" uniquement pour cette conversation
     inputWrapper.classList.remove("hidden");
 
-    document.getElementById("conversation-title").textContent = conversation.title;
+    document.getElementById("conversation-title").textContent = conversation.titre;
     scrollToBottom();
 
     const container = document.getElementById("messages-container");
     container.innerHTML = "";
 
     // Extraire les participants uniques de la conversation
-    const participants = [...new Set(conversation.messages.map(msg => msg.sender))];
+    const participants = [...new Set(conversation.messages.map(msg => msg.auteur))];
     const predefinedColors = [
         "#FF6347", "#2ecc71", "#3498db", "#f39c12", "#9b59b6", "#e74c3c", "#1abc9c", "#f1c40f"
     ];
@@ -253,15 +281,15 @@ function showConversation(conversation) {
     conversation.messages.forEach(msg => {
         const msgDiv = document.createElement("div");
         const msgDiv_texte = document.createElement("div");
-        const senderColor = userColors[msg.sender] || "#3498db"; // Défaut si non trouvé
-        if (msg.sender == user.nom) {
+        const senderColor = userColors[msg.auteur] || "#3498db"; // Défaut si non trouvé
+        if (msg.auteur == user.nom) {
             msgDiv.classList.add("message-own");
             msgDiv_texte.classList.add("message-texte-own");
-            msgDiv_texte.innerHTML = `<p><strong> Moi</strong></p><p>${msg.text}</p>`;
+            msgDiv_texte.innerHTML = `<p><strong> Moi</strong></p><p>${msg.contenu}</p>`;
         } else {
             msgDiv.classList.add("message");
             msgDiv_texte.classList.add("message-texte");
-            msgDiv_texte.innerHTML = `<p><strong style="color: ${senderColor}">${msg.sender}</strong></p><p>${msg.text}</p>`;
+            msgDiv_texte.innerHTML = `<p><strong style="color: ${senderColor}">${msg.auteur}</strong></p><p>${msg.contenu}</p>`;
         }
         
         msgDiv.appendChild(msgDiv_texte);
@@ -298,8 +326,8 @@ function sendMessage(conversation, input) {
     const messageText = input.value.trim();
     if (messageText !== "") {
         conversation.messages.push({
-            sender: user.nom,
-            text: messageText
+            auteur: user.nom,
+            contenu: messageText
         });
         console.log("Le message est envoyé à la conversation : ", conversation);
 
@@ -327,7 +355,7 @@ function openConversationSettings(conv) {
     const saveBtn = document.getElementById("save-conv-settings");
     const membersList = document.getElementById("members-list-edit-conv");
 
-    nameInput.value = conv.title || "";
+    nameInput.value = conv.titre || "";
     descInput.value = conv.description || "undefined";
 
     const isOwner = conv.owner === user.username;
@@ -354,24 +382,24 @@ function openConversationSettings(conv) {
         const wrapper = document.createElement("div");
         wrapper.classList.add("member-item");
 
-        const isChecked = conv.members.includes(u.username);
+        const isChecked = conv.listeMembres.includes(u.username);
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.value = u.username;
-
+    
         if (isChecked) {
             checkbox.checked = true;
         }
         if (!isOwner) {
-            // Si non-owner, décocher interdit, cocher interdit
             checkbox.disabled = true;
         }
-
+    
         const label = document.createElement("label");
+        label.classList.add("member-label");
         label.appendChild(checkbox);
         label.append(` ${u.prenom} ${u.nom}`);
-
+    
         wrapper.appendChild(label);
         membersList.appendChild(wrapper);
     });
