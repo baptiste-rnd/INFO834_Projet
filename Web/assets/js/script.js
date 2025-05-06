@@ -1,3 +1,11 @@
+// Vérifie si l'utilisateur est connecté
+const userId = localStorage.getItem('userId');
+
+if (!userId) {
+    // Si aucun userId, redirige vers la page de connexion
+    window.location.href = 'connexion.html';
+}
+
 const conversations = [
     { id: 1,owner:"pupuce", title: "Projet A",members:["pupuce","louloute","davdav"], messages: [
       { sender: "Alice", text: "Salut, on commence ?" },
@@ -20,7 +28,6 @@ const connectedUsers = ["Alice", "Bob", "Eve", "David"];
 
 
 //Récupération des infos de l'utilisateurs.
-const userId = localStorage.getItem("userId");
 let user={};
 
 async function getUserInfo() {

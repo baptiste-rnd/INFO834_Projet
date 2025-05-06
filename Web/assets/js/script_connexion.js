@@ -1,3 +1,11 @@
+// Vérifie si l'utilisateur est connecté
+const userId = localStorage.getItem('userId');
+
+if (userId) {
+    // Si aucun userId, redirige vers la page de connexion
+    window.location.href = '/';
+}
+
 function toggleForms() {
     document.getElementById('login-form').classList.toggle('hidden');
     document.getElementById('register-form').classList.toggle('hidden');
