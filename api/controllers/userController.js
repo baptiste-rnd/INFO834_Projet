@@ -63,12 +63,12 @@ export const deleteUser = async (req, res) => {
 // Méthode de connexion
 export const loginUser = async (req, res) => {
     try {
-        const { username, mdp } = req.body;
-        const user = await User.findOne({ username, mdp });
+        const { username, motDePasse } = req.body;
+        const user = await User.findOne({ username, motDePasse });
         if (!user) {
             return res.status(401).json({ message: 'username ou mot de passe incorrect' });
         }
-        res.status(200).json({ success: true });
+        res.status(200).json({ success: true, id: user._id });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la tentative de connexion', error });
     }
