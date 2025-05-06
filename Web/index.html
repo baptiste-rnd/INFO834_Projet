@@ -8,10 +8,53 @@
 <body>
   <div class="main-container">
     
+    <div id="settings-panel" class="settings-panel hidden">
+      <span id="close-settings" class="close-btn">&times;</span>
+
+      <h3>Modifier le profil</h3>
+      <label for="input-nom">Nom</label>
+      <input type="text" id="input-nom" placeholder="Votre nom">
+      
+      <label for="input-prenom">Prénom</label>
+      <input type="text" id="input-prenom" placeholder="Votre prénom">
+      
+      <label for="input-username">Username</label>
+      <input type="text" id="input-username" placeholder="Nom d'utilisateur">
+    
+      <button id="save-settings">Valider</button>
+    </div>
+
+    <div id="conversation-panel" class="conversation-panel hidden">
+      <span id="close-conversation" class="close-btn">&times;</span>
+
+      <h3>Créér une nouvelle conversation</h3>
+      <label for="input-nom">Nom</label>
+      <input type="text" id="input-nom" placeholder="Nom de la conversation">
+      
+      <label for="input-prenom">Description</label>
+      <input type="text" id="input-prenom" placeholder="Description de la conversation">
+      <label for="input-member">Sélectionnez les membres</label>
+      <div id="members-list" class="members-list">
+        <!-- Les utilisateurs seront injectés ici dynamiquement -->
+      </div>
+      <button id="save-conversation">Créér la conversation</button>
+    </div>
+
     <aside class="sidebar">
-        <div class="user_info" id="user-info"></div>
+        <div class="user-info" id="user-info">
+          <div class="user-info-texte" id="user-info-texte">
+          </div>
+          <button id="toggle-settings" class="settings-button">
+            <img src="assets/img/edit.png" alt="Paramètres" />
+          </button>
+        </div>
         <div class="conversation">
-            <h2>Conversations</h2>
+            <div class="conversation_title_add"> 
+              <h2>Conversations</h2>
+              <button id="toggle-conversation" class="new-conv-button">
+                <img src="assets/img/new_conv.png" alt="Paramètres" />
+              </button>
+            </div>
             <ul id="conversation-list"></ul>
         </div>
         <div class="logout-container">
@@ -29,7 +72,17 @@
       
       <div class="conversation-detail">
         <h3 id="conversation-title">Sélectionnez une conversation</h3>
-        <div id="messages-container"></div>
+        <div class="messages-container" id="messages-container"></div>
+        <div class="input-wrapper hidden" id="input-wrapper">
+          <input
+            type="text"
+            id="write-bar"
+            name="write-bar"
+            placeholder="Écrivez un message..."
+            class="write-bar"
+          />
+          <button class="send-button" id="send-button">Envoyer</button>
+        </div>        
       </div>
     </section>
   </div>
