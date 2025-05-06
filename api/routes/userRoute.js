@@ -1,6 +1,6 @@
 // Importation des modules nécessaires
 import express from 'express';
-import {getAllUsers,getUserById,createUser,updateUser,deleteUser,loginUser} from '../controllers/userController.js';
+import {getAllUsers,getUserById,createUser,updateUser,deleteUser,loginUser,logoutUser} from '../controllers/userController.js';
 
 const router = express.Router();
 
@@ -21,6 +21,9 @@ router.delete('/:id', deleteUser);
 
 // Route pour le login d'un utilisateur
 router.post('/login', loginUser);
+
+// Route pour le logout d'un utilisateur
+router.post('/logout', logoutUser);
 
 
 export default router;

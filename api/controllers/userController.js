@@ -1,5 +1,17 @@
 import User from '../models/userModel.js';
 
+import { createClient } from 'redis';
+
+// Créer un client Redis
+const redisClient = createClient({
+    url: 'redis://redis:6379'
+  });
+
+redisClient.on('error', (err) => console.error('Redis Client Error', err));
+
+// Connexion à Redis
+await redisClient.connect();
+
 // Obtenir tous les utilisateurs
 export const getAllUsers = async (req, res) => {
     try {
@@ -68,8 +80,31 @@ export const loginUser = async (req, res) => {
         if (!user) {
             return res.status(401).json({ message: 'username ou mot de passe incorrect' });
         }
+
+        // Enregistrer dans Redis
+        const dateConnexion = new Date().toISOString();
+        await redisClient.set(`login:${user._id}`, dateConnexion);
+
         res.status(200).json({ success: true, id: user._id });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la tentative de connexion', error });
+    }
+};
+
+// Méthode de deconnexion
+export const logoutUser = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.status(401).json();
+        }
+
+        // Supprimer dans Redis
+        await redisClient.del(`login:${userId}`);
+
+        res.status(200).json({ success: true });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la tentative de déconnexion', error });
     }
 };
