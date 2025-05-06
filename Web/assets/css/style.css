@@ -244,6 +244,13 @@ h2{
 }
 
 
+.conversation-list button{
+  width: 100%;
+  padding: 10px;
+  background-color: var(--main-blue);
+}
+
+
 /* Statistiques */
 .statistiques {
   margin-bottom: 10px;
