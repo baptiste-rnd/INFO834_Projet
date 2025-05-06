@@ -5,30 +5,38 @@ if (!userId) {
     // Si aucun userId, redirige vers la page de connexion
     window.location.href = 'connexion.html';
 }
-// const conversations = [
-//     { id: 1,owner:"pupuce", title: "Projet A",members:["pupuce","louloute","davdav"], messages: [
-//       { sender: "Alice", text: "Salut, on commence ?" },
-//       { sender: "Bob", text: "Oui, go !" },
-//       { sender: "Alice", text: "Ca va ou quoi " },
-//       { sender: "Alice", text: " t'as snap?" },
-//       { sender: "Bob", text: "Chui marié" },
-//       { sender: "Thomas", text: " t'as snap?" },
-//       { sender: "Baptiste", text: " t'as snap?" },
-//       { sender: "Bob", text: "Vos gueules" },
-
-//     ]},
-//     { id: 2, owner:"louloute",title: "Equipe Tech",members:["evele","louloute","davdav"], messages: [
-//       { sender: "Eve", text: "Bug corrigé ?" },
-//       { sender: "David", text: "Presque !" }
-//     ]},
-// ];
-  
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////    Utilisateur connecté Redis               /////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const connectedUsers = ["Alice", "Bob", "Eve", "David"];
+// Remplir les utilisateurs connectés
+const usersList = document.getElementById("users-list");
+connectedUsers.forEach(user => {
+    const userContainer = document.createElement("div");
+    userContainer.classList.add("user-item");
 
+    const span = document.createElement("span");
+    span.textContent = user;
 
+    const onlineDot = document.createElement("span");
+    onlineDot.classList.add("online-dot");
+
+    userContainer.appendChild(onlineDot);
+    userContainer.appendChild(span);
+    usersList.appendChild(userContainer);
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////    Utilisateur                   ////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Récupération des infos de l'utilisateurs.
 let user={};
 
+//récupérer les infos de l'utilisateurs
 async function getUserInfo() {
   if (userId) {
     try {
@@ -51,6 +59,7 @@ async function getUserInfo() {
   }
 }
 
+//afficher les infos de l'utilisateur
 function display_user_info() {
     getUserInfo()
     const userInfoDiv = document.getElementById("user-info-texte");
@@ -87,7 +96,7 @@ document.getElementById("save-settings").addEventListener("click", () => {
     // Envoi à l'API
     const userId = localStorage.getItem("userId");
     if (userId) {
-        fetch(`http://localhost:3000/u/update/${userId}`, {
+        fetch(`/u/update/${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -121,7 +130,8 @@ document.getElementById("save-settings").addEventListener("click", () => {
 //Creation de la liste avec tous les utilisateurs
 let allUsers = [];
 
-fetch("http://localhost:3000/u").then(response => {
+async function getAllUsers(){
+    fetch("/u").then(response => {
         if (!response.ok) {
         throw new Error("Erreur lors de la récupération des utilisateurs");
         }
@@ -135,9 +145,15 @@ fetch("http://localhost:3000/u").then(response => {
     .catch(error => {
         console.error("Erreur API :", error);
 });
+}
+getAllUsers();
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////      Conversation                  ////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Conversation
 const inputWrapper = document.getElementById("input-wrapper");
@@ -157,7 +173,21 @@ async function getUserConversations(userId) {
       throw new Error("Erreur lors de la récupération des conversations");
     }
     const data = await response.json();
-    conversations = data;
+
+    conversations = data.map(conv => {
+        const ownerUser = allUsers.find(user => user._id === conv.owner);
+        const membresUsernames = conv.listeMembres.map(memberId => {
+          const user = allUsers.find(u => u._id === memberId);
+          return user ? user.username : "Inconnu";
+        });
+  
+        return {
+          ...conv,
+          owner: ownerUser ? ownerUser.username : "Inconnu",
+          listeMembres: membresUsernames
+        };
+    });
+
     console.log("Conversations récupérées :", conversations);
     displayConversation();
   } catch (error) {
@@ -165,11 +195,14 @@ async function getUserConversations(userId) {
   }
 }
 
+//recuperer toutes les conv d'un utilisateurs
 getUserConversations(userId);
 
+//afficher les conversations 
 function displayConversation(){
     // Remplir les conversations
     const conversationList = document.getElementById("conversation-list");
+    conversationList.innerHTML="";
     conversations.forEach(conv => {
         const li = document.createElement("li");
 
@@ -202,29 +235,11 @@ function displayConversation(){
     });
 }
 
-
 // Variable pour garder une référence de la conversation active
 let activeConversation = null;
-
-// Remplir les utilisateurs connectés
-const usersList = document.getElementById("users-list");
-connectedUsers.forEach(user => {
-    const userContainer = document.createElement("div");
-    userContainer.classList.add("user-item");
-
-    const span = document.createElement("span");
-    span.textContent = user;
-
-    const onlineDot = document.createElement("span");
-    onlineDot.classList.add("online-dot");
-
-    userContainer.appendChild(onlineDot);
-    userContainer.appendChild(span);
-    usersList.appendChild(userContainer);
-});
-
 let messages = [];
 
+//recuperer les messages et les assigners a une conversation
 async function getMessagesByConversation(conversation,conversationId) {
   try {
     const response = await fetch(`m/conversation/${conversationId}`);
@@ -242,6 +257,8 @@ async function getMessagesByConversation(conversation,conversationId) {
     console.error("Erreur :", error.message);
   }
 }
+
+//recuperer les username par rapport aux id
 function getSenderNameById(auteurId) {
 
     const temp_user = allUsers.find(u => u._id === auteurId);
@@ -259,7 +276,37 @@ async function showConversation(conversation) {
     // Afficher le champ de saisie et le bouton "Envoyer" uniquement pour cette conversation
     inputWrapper.classList.remove("hidden");
 
-    document.getElementById("conversation-title").textContent = conversation.titre;
+    // Cible le conteneur où afficher le header de conversation
+    const headerContainer = document.getElementById("conversation-header");
+    headerContainer.innerHTML = ""; // Reset du contenu précédent
+
+    // Crée la div principale du header
+    const headerDiv = document.createElement("div");
+    headerDiv.classList.add("conversation-header");
+
+    // Titre de la conversation
+    const title = document.createElement("h3");
+    title.textContent = conversation.titre;
+    title.classList.add("conversation-title");
+
+    // Bouton pour quitter avec une icône
+    const leaveButton = document.createElement("button");
+    leaveButton.classList.add("leave-button");
+    leaveButton.title = "Quitter la conversation";
+    leaveButton.innerHTML = `<img src="assets/img/leave.png" alt="Quitter" class="leave-icon">`;
+    leaveButton.addEventListener("click", () => {
+        if (confirm("Voulez-vous vraiment quitter cette conversation ?")) {
+            leaveConversation(conversation._id);
+        }
+    });
+
+    // Assembler le header
+    headerDiv.appendChild(title);
+    headerDiv.appendChild(leaveButton);
+
+    // L'injecter dans la page
+    headerContainer.appendChild(headerDiv);
+
     scrollToBottom();
 
     const container = document.getElementById("messages-container");
@@ -328,17 +375,14 @@ function sendMessage(conversation, input) {
             auteur: userId, // suppose que user a un champ `_id`
             contenu: messageText,
             conversation: conversation._id
-            
         };
-
-        
         conversation.messages.push({
             auteur: user.nom,
             contenu: messageText
         });
 
        
-        fetch("http://localhost:3000/m/", {
+        fetch("/m/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -366,6 +410,34 @@ function sendMessage(conversation, input) {
     }
 }
 
+//quitter une conversation
+async function leaveConversation(conversationId) {
+    try {
+        const response = await fetch(`/c/removeParticipant/${conversationId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                participantId: userId
+            })
+        });
+
+        if (!response.ok) {
+            const errMsg = await response.text();
+            throw new Error("Erreur lors du départ : " + errMsg);
+        }
+
+        const result = await response.json();
+        console.log("Départ confirmé :", result);
+
+        alert("Vous avez quitté la conversation.");
+        displayConversation(userId);    
+    } catch (error) {
+        console.error("Erreur :", error.message);
+        alert("Impossible de quitter la conversation.");
+    }
+}
 
 
 // Fonction pour faire défiler jusqu'en bas
@@ -373,7 +445,12 @@ function scrollToBottom() {
     const container = document.getElementById("messages-container");
     container.scrollTop = container.scrollHeight;
 }
-  
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////    Création et modification d'infos     ////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // modifier une conversation
 function openConversationSettings(conv) {
     const panel = document.getElementById("conv-settings-panel");
@@ -408,49 +485,77 @@ function openConversationSettings(conv) {
 
     // Remplir la liste des membres avec cases à cocher
     allUsers.forEach(u => {
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("member-item");
+        if (u.username !== user.username) {
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("member-item");
 
-        const isChecked = conv.listeMembres.includes(u.username);
+            const isChecked = conv.listeMembres.includes(u.username);
 
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.value = u.username;
-    
-        if (isChecked) {
-            checkbox.checked = true;
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = u.username;
+            
+            if (isChecked) {
+                checkbox.checked = true;
+            }
+            if (!isOwner) {
+                checkbox.disabled = true;
+            }
+            
+            const label = document.createElement("label");
+            label.classList.add("member-label");
+            label.appendChild(checkbox);
+            label.append(` ${u.prenom} ${u.nom}`);
+        
+            wrapper.appendChild(label);
+            membersList.appendChild(wrapper);
         }
-        if (!isOwner) {
-            checkbox.disabled = true;
-        }
-    
-        const label = document.createElement("label");
-        label.classList.add("member-label");
-        label.appendChild(checkbox);
-        label.append(` ${u.prenom} ${u.nom}`);
-    
-        wrapper.appendChild(label);
-        membersList.appendChild(wrapper);
     });
 
     // Sauvegarde des modifications (seulement si owner)
-    saveBtn.onclick = () => {
+    saveBtn.onclick = async() => {
         if (!isOwner) return;
 
         const checkedBoxes = membersList.querySelectorAll("input[type='checkbox']:checked");
         const selectedMembers = Array.from(checkedBoxes).map(cb => cb.value);
 
+        // Map les usernames vers les _id correspondants
+        const selectedIds = selectedMembers.map(username => {
+            const user = allUsers.find(u => u.username === username);
+            return user ? user._id : null;
+        }).filter(id => id !== null); 
+
         conv.title = nameInput.value;
         conv.description = descInput.value;
-        conv.members = selectedMembers;
+        conv.listeMembres = selectedIds;
 
         panel.classList.add("hidden");
 
-        // Optionnel : appel API
-        // fetch('/api/updateConversation', { method: "POST", body: JSON.stringify(conv) });
+        try {
+            const response = await fetch(`/c/update/${conv._id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    titre: conv.title,
+                    description: conv.description,
+                    listeMembres: conv.listeMembres
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la mise à jour de la conversation");
+            }
+
+            const updatedConv = await response.json();
+            console.log("Conversation mise à jour :", updatedConv);
+
+        } catch (error) {
+            console.error("Erreur :", error.message);
+        }
     };
 }
-
 
 // Fermeture du panneau
 document.getElementById("close-conv-settings").addEventListener("click", () => {
@@ -458,29 +563,73 @@ document.getElementById("close-conv-settings").addEventListener("click", () => {
 });
 
 
+//Créér une conversation
+document.getElementById("save-conversation").addEventListener("click", async () => {
+    const nom = document.getElementById("input-titre").value.trim();
+    const description = document.getElementById("input-description").value.trim();
 
+    const selectedUsernames = Array.from(
+        document.querySelectorAll("#members-list input[type='checkbox']:checked")
+    ).map(checkbox => checkbox.value); // usernames
 
+    // Convertir les usernames en _id
+    let selectedIds = selectedUsernames.map(username => {
+        const userObj = allUsers.find(u => u.username === username);
+        return userObj ? userObj._id : null;
+    }).filter(id => id !== null);
+
+    selectedIds.push(userId);//ajout automatique de l'utilisateur 
+
+    const conversationData = {
+        owner: userId,
+        titre: nom,
+        description: description,
+        listeMembres: selectedIds
+    };
+
+    try {
+        const response = await fetch("/c/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(conversationData)
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur lors de la création de la conversation");
+        }
+
+        const newConv = await response.json();
+        console.log("Conversation créée :", newConv);
+
+        document.getElementById("conversation-panel").classList.add("hidden");
+    } catch (error) {
+        console.error("Erreur :", error.message);
+    }
+});
 
 
 document.getElementById("toggle-conversation").addEventListener("click", () => {
     const membersDiv = document.getElementById("members-list");
     membersDiv.innerHTML = ""; // reset
-
-    //a remplacer par tous les users
-    allUsers.forEach(user => {
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("member-item");
-        wrapper.innerHTML = `
-        <label>
-            <input type="checkbox" value="${user.username}">
-            ${user.prenom} ${user.nom}
-        </label>
-        `;
-        membersDiv.appendChild(wrapper);
+    allUsers.forEach(u => {
+        if (u.username !== user.username) { // Exclure l'utilisateur connecté
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("member-item");
+            wrapper.innerHTML = `
+            <label>
+                <input type="checkbox" value="${u.username}">
+                ${u.prenom} ${u.nom}
+            </label>
+            `;  
+            membersDiv.appendChild(wrapper);
+        }
     });
 
     document.getElementById("conversation-panel").classList.toggle("hidden");
 });
+
 
 // Fermer avec la croix
 document.getElementById("close-conversation").addEventListener("click", () => {
@@ -489,20 +638,11 @@ document.getElementById("close-conversation").addEventListener("click", () => {
 
 
 
-// Creer la conversation
-document.getElementById("save-conversation").addEventListener("click", () => {
-    const nom = document.getElementById("input-nom").value;
-    const description = document.getElementById("input-prenom").value;
-
-    const selectedIds = Array.from(
-        document.querySelectorAll("#members-list input[type='checkbox']:checked")
-    ).map(checkbox => parseInt(checkbox.value));
-
-    // TODO : envoyer à l'API ou mettre à jour l'objet `user`
-
-    document.getElementById("conversation-panel").classList.add("hidden");
-});
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////    Statistiques Redis            ////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateStats() {
     const list = document.getElementById("statistiques-list");
     list.innerHTML = ""; // Réinitialiser la liste
@@ -563,7 +703,11 @@ updateStats();
 
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////    User experience               ////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function makeDraggable(panelId) {
     const panel = document.getElementById(panelId);
     let isDragging = false;

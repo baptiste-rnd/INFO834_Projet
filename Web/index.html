@@ -31,11 +31,11 @@
       <span id="close-conversation" class="close-btn">&times;</span>
 
       <h3>Créér une nouvelle conversation</h3>
-      <label for="input-nom">Nom</label>
-      <input type="text" id="input-nom" placeholder="Nom de la conversation">
+      <label for="input-titre">Nom</label>
+      <input type="text" id="input-titre" placeholder="Nom de la conversation">
       
-      <label for="input-prenom">Description</label>
-      <input type="text" id="input-prenom" placeholder="Description de la conversation">
+      <label for="input-description">Description</label>
+      <input type="text" id="input-description" placeholder="Description de la conversation">
       <label for="input-member">Sélectionnez les membres</label>
       <div id="members-list" class="members-list">
         <!-- Les utilisateurs seront injectés ici dynamiquement -->
@@ -102,7 +102,11 @@
 
       
       <div class="conversation-detail">
-        <h3 id="conversation-title">Sélectionnez une conversation</h3>
+        <div class="title_leave_conversation">
+            <div id="conversation-header">
+              <h3 id="conversation-title">Sélectionnez une conversation</h3>
+            </div>
+        </div>
         <div class="messages-container" id="messages-container"></div>
         <div class="input-wrapper hidden" id="input-wrapper">
           <input

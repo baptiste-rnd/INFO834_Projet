@@ -1,16 +1,16 @@
 // Import necessary modules
 import Conversation from '../models/conversationModel.js';
-// Create a new conversation with owner, title, and description
 
+// Create a new conversation with owner, title, and description
 export const createConversation = async (req, res) => {
     try {
-        const { owner, title, description } = req.body; 
+        const { owner, titre, description,listeMembres } = req.body; 
 
         if (!owner) {
             return res.status(400).json({ message: 'Owner is required.' });
         }
 
-        if (!title || typeof title !== 'string') {
+        if (!titre || typeof titre !== 'string') {
             return res.status(400).json({ message: 'A valid title is required.' });
         }
 
@@ -18,7 +18,7 @@ export const createConversation = async (req, res) => {
             return res.status(400).json({ message: 'A valid description is required.' });
         }
 
-        const newConversation = new Conversation({ owner, title, description });
+        const newConversation = new Conversation({ owner, titre, description,listeMembres });
         const savedConversation = await newConversation.save();
 
         res.status(201).json(savedConversation);
@@ -79,11 +79,11 @@ export const deleteConversation = async (req, res) => {
 export const updateConversation = async (req, res) => {
     try {
         const conversationId = req.params.conversationId;
-        const { title, description } = req.body;
+        const { titre, description,listeMembres } = req.body;
 
         const updatedConversation = await Conversation.findByIdAndUpdate(
             conversationId,
-            { title, description },
+            { titre, description,listeMembres },
             { new: true }
         );
 
@@ -97,27 +97,41 @@ export const updateConversation = async (req, res) => {
     }
 };
 
-// Add a participant to a conversation
-export const addParticipant = async (req, res) => {
+//Supprimer une membre de la conversation
+export const removeParticipant = async (req, res) => {
     try {
         const conversationId = req.params.conversationId;
         const { participantId } = req.body;
 
-        const updatedConversation = await Conversation.findByIdAndUpdate(
-            conversationId,
-            { $addToSet: { participants: participantId } },
-            { new: true }
-        );
-
-        if (!updatedConversation) {
-            return res.status(404).json({ message: 'Conversation not found' });
+        const conversation = await Conversation.findById(conversationId);
+        if (!conversation) {
+            return res.status(404).json({ message: 'Conversation non trouvée' });
         }
 
-        res.status(200).json(updatedConversation);
+        // Retirer le participant
+        conversation.listeMembres.pull(participantId);
+
+        //si le participant est le propriétaire
+        if (conversation.owner.toString() === participantId) {
+            if (conversation.listeMembres.length > 0) {
+                // Nouveau propriétaire = premier membre restant
+                conversation.owner = conversation.listeMembres[0];
+            } else {
+                // Plus de membres : supprimer la conversation
+                await Conversation.findByIdAndDelete(conversationId);
+                return res.status(200).json({ message: 'Conversation supprimée car plus de membres.' });
+            }
+        }
+
+        await conversation.save();
+
+        res.status(200).json(conversation);
     } catch (error) {
-        res.status(500).json({ message: 'Error adding participant', error });
+        res.status(500).json({ message: 'Erreur lors du retrait du participant', error });
     }
 };
+
+
 
 // get conversations details by ID
 export const getConversationDetails = async (req, res) => {

@@ -1,6 +1,6 @@
 // Importation des modules nécessaires
 import express from 'express';
-import {createConversation,getUserConversations,getConversationDetails,updateConversation,addParticipant} from '../controllers/conversationController.js';
+import {createConversation,getUserConversations,getConversationDetails,updateConversation,removeParticipant} from '../controllers/conversationController.js';
 
 const router = express.Router();
 
@@ -17,6 +17,6 @@ router.get('/details:conversationId', getConversationDetails);
 router.put('/update/:conversationId', updateConversation);
 
 // Route pour ajouter un participant à une conversation
-router.put('/addParticipant/:conversationId', addParticipant);
+router.put('/removeParticipant/:conversationId', removeParticipant);
 
 export default router;

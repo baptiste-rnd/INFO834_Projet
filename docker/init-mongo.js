@@ -63,13 +63,13 @@ const conversations = [
         titre: 'Développeurs Web',
         description: 'Discussion sur les technologies de développement web.',
         owner: corentinId, // Corentin est l'owner
-        listeMembres: [maxensId, baptisteId, thomasId] // Maxens, Baptiste, et Thomas sont membres
+        listeMembres: [maxensId, baptisteId, thomasId,corentinId] // Maxens, Baptiste, et Thomas sont membres
     },
     {
         titre: 'Voyage à Paris',
         description: 'Préparons notre voyage à Paris.',
         owner: maxensId, // Maxens est l'owner
-        listeMembres: [corentinId, thomasId] // Corentin et Thomas sont membres
+        listeMembres: [corentinId, thomasId,maxensId] // Corentin et Thomas sont membres
     }
 ];
 
