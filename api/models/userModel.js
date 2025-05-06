@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
     id: {
@@ -17,11 +17,18 @@ const userSchema = new mongoose.Schema({
     motDePasse: {
         type: String,
         required: true
-    }
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
 }, {
     timestamps: true 
 });
 
-const User = mongoose.model('User', userSchema);
+// Création du modèle
+const User = mongoose.model('User', userSchema, 'user');
 
-module.exports = User;
+// Exportation du modèle
+export default User;

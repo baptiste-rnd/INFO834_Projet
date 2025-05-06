@@ -1,7 +1,7 @@
-const Message = require('../models/messageModel');
+import Message from '../models/messageModel.js';
 
 // Récupérer tous les messages
-exports.getAllMessages = async (req, res) => {
+export const getAllMessages = async (req, res) => {
     try {
         const messages = await Message.find();
         res.status(200).json(messages);
@@ -11,7 +11,7 @@ exports.getAllMessages = async (req, res) => {
 };
 
 // Récupérer un message par ID
-exports.getMessageById = async (req, res) => {
+export const getMessageById = async (req, res) => {
     try {
         const message = await Message.findById(req.params.id);
         if (!message) {
@@ -24,7 +24,7 @@ exports.getMessageById = async (req, res) => {
 };
 
 // Créer un nouveau message
-exports.createMessage = async (req, res) => {
+export const createMessage = async (req, res) => {
     try {
         const { author, content, conversationId } = req.body;
 
@@ -41,7 +41,7 @@ exports.createMessage = async (req, res) => {
 };
 
 // Mettre à jour un message
-exports.updateMessage = async (req, res) => {
+export const updateMessage = async (req, res) => {
     try {
         const updatedMessage = await Message.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedMessage) {
@@ -54,7 +54,7 @@ exports.updateMessage = async (req, res) => {
 };
 
 // Supprimer un message
-exports.deleteMessage = async (req, res) => {
+export const deleteMessage = async (req, res) => {
     try {
         const deletedMessage = await Message.findByIdAndDelete(req.params.id);
         if (!deletedMessage) {
@@ -66,7 +66,7 @@ exports.deleteMessage = async (req, res) => {
     }
 };
 // Récupérer tous les messages par ID de conversation
-exports.getMessagesByConversationId = async (req, res) => {
+export const getMessagesByConversationId = async (req, res) => {
     try {
         const messages = await Message.find({ conversationId: req.params.conversationId });
         if (!messages || messages.length === 0) {

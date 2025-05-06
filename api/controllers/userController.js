@@ -1,7 +1,7 @@
-const User = require('../models/userModel'); 
+import User from '../models/userModel.js';
 
 // Obtenir tous les utilisateurs
-exports.getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
     try {
         const users = await User.find();
         res.status(200).json(users);
@@ -11,7 +11,7 @@ exports.getAllUsers = async (req, res) => {
 };
 
 // Obtenir un utilisateur par ID
-exports.getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
@@ -24,7 +24,7 @@ exports.getUserById = async (req, res) => {
 };
 
 // Créer un nouvel utilisateur
-exports.createUser = async (req, res) => {
+export const createUser = async (req, res) => {
     try {
         const newUser = new User(req.body);
         const savedUser = await newUser.save();
@@ -35,7 +35,7 @@ exports.createUser = async (req, res) => {
 };
 
 // Mettre à jour un utilisateur
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
     try {
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedUser) {
@@ -48,7 +48,7 @@ exports.updateUser = async (req, res) => {
 };
 
 // Supprimer un utilisateur
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
@@ -61,12 +61,12 @@ exports.deleteUser = async (req, res) => {
 };
 
 // Méthode de connexion
-exports.login = async (req, res) => {
+export const loginUser = async (req, res) => {
     try {
-        const { nom, prenom, mdp } = req.body;
-        const user = await User.findOne({ nom, prenom, mdp });
+        const { username, mdp } = req.body;
+        const user = await User.findOne({ username, mdp });
         if (!user) {
-            return res.status(401).json({ message: 'Nom, prénom ou mot de passe incorrect' });
+            return res.status(401).json({ message: 'username ou mot de passe incorrect' });
         }
         res.status(200).json({ success: true });
     } catch (error) {

@@ -1,24 +1,25 @@
-const express = require('express');
-const messageController = require('../controllers/messageController');
+import express from 'express';
+import {getAllMessages,getMessageById,createMessage,updateMessage,deleteMessage,getMessagesByConversationId} from '../controllers/messageController.js';
 
 const router = express.Router();
 
 // Route pour récupérer tous les messages
-router.get('/', messageController.getAllMessages);
+router.get('/', getAllMessages);
 
 // Route pour récupérer un message par ID
-router.get('/:id', messageController.getMessageById);
+router.get('/:id', getMessageById);
 
 // Route pour créer un nouveau message
-router.post('/', messageController.createMessage);
+router.post('/', createMessage);
 
 // Route pour mettre à jour un message existant
-router.put('/:id', messageController.updateMessage);
+router.put('/:id', updateMessage);
 
 // Route pour supprimer un message
-router.delete('/:id', messageController.deleteMessage);
+router.delete('/:id', deleteMessage);
 
 // Route pour récupérer tous les messages selon l'ID de la conversation
-router.get('/conversation/:conversationId', messageController.getMessagesByConversationId);
+router.get('/conversation/:conversationId', getMessagesByConversationId);
 
-module.exports = router;
+
+export default router;
