@@ -110,9 +110,9 @@ connectedUsers.forEach(user => {
 
     const onlineDot = document.createElement("span");
     onlineDot.classList.add("online-dot");
-
-    userContainer.appendChild(span);
+    
     userContainer.appendChild(onlineDot);
+    userContainer.appendChild(span);
     usersList.appendChild(userContainer);
 });
 
