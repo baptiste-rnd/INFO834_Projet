@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Vérifie si l'utilisateur est connecté
 const userId = localStorage.getItem('userId');
 
@@ -16,13 +17,25 @@ const conversations = [
       { sender: "Thomas", text: " t'as snap?" },
       { sender: "Baptiste", text: " t'as snap?" },
       { sender: "Bob", text: "Vos gueules" },
+=======
+// const conversations = [
+//     { id: 1,owner:"pupuce", title: "Projet A",members:["pupuce","louloute","davdav"], messages: [
+//       { sender: "Alice", text: "Salut, on commence ?" },
+//       { sender: "Bob", text: "Oui, go !" },
+//       { sender: "Alice", text: "Ca va ou quoi " },
+//       { sender: "Alice", text: " t'as snap?" },
+//       { sender: "Bob", text: "Chui marié" },
+//       { sender: "Thomas", text: " t'as snap?" },
+//       { sender: "Baptiste", text: " t'as snap?" },
+//       { sender: "Bob", text: "Vos gueules" },
+>>>>>>> ede1327de08fc7a30cbf2618029349fa07a639f4
 
-    ]},
-    { id: 2, owner:"louloute",title: "Equipe Tech",members:["evele","louloute","davdav"], messages: [
-      { sender: "Eve", text: "Bug corrigé ?" },
-      { sender: "David", text: "Presque !" }
-    ]},
-];
+//     ]},
+//     { id: 2, owner:"louloute",title: "Equipe Tech",members:["evele","louloute","davdav"], messages: [
+//       { sender: "Eve", text: "Bug corrigé ?" },
+//       { sender: "David", text: "Presque !" }
+//     ]},
+// ];
   
 const connectedUsers = ["Alice", "Bob", "Eve", "David"];
 
@@ -53,13 +66,14 @@ async function getUserInfo() {
 }
 
 function display_user_info() {
-  const userInfoDiv = document.getElementById("user-info-texte");
-  userInfoDiv.innerHTML = `
-    <img src="assets/img/profil.png" alt="Photo de profil" class="profile-pic">
-    <div class="user-details">
-        <p class="user-name">${user.prenom} ${user.nom}</p>
-    </div>
-  `;
+    getUserInfo()
+    const userInfoDiv = document.getElementById("user-info-texte");
+    userInfoDiv.innerHTML = `
+        <img src="assets/img/profil.png" alt="Photo de profil" class="profile-pic">
+        <div class="user-details">
+            <p class="user-name">${user.prenom} ${user.nom}</p>
+        </div>
+    `;
 }
 
 // Appel de la fonction async au chargement
@@ -84,41 +98,36 @@ document.getElementById("save-settings").addEventListener("click", () => {
     const prenom = document.getElementById("input-prenom").value.trim();
     const username = document.getElementById("input-username").value.trim();
 
-     // Mise à jour de l'objet user
-    user.nom = nom;
-    user.prenom = prenom;
-    user.username = username;
-
-    display_user_info();
     // Envoi à l'API
     const userId = localStorage.getItem("userId");
     if (userId) {
         fetch(`http://localhost:3000/u/update/${userId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            nom: user.nom,
-            prenom: user.prenom,
-            username: user.username
-        })
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nom: nom,
+                prenom: prenom,
+                username: username
+            })
         })
         .then(response => {
-        if (!response.ok) {
-            throw new Error("Échec de la mise à jour de l'utilisateur");
-        }
-        return response.json();
+            if (!response.ok) {
+                throw new Error("Échec de la mise à jour de l'utilisateur");
+            }
+            return response.json();
         })
         .then(updatedUser => {
-        console.log("Utilisateur mis à jour :", updatedUser);
-        display_user_info();
-        document.getElementById("settings-panel").classList.add("hidden");
+            console.log("Utilisateur mis à jour :", updatedUser);
+            display_user_info();
+            document.getElementById("settings-panel").classList.add("hidden");
         })
         .catch(error => {
-        console.error("Erreur lors de la mise à jour :", error);
+            console.error("Erreur lors de la mise à jour :", error);
         });
-    } else {
+    } 
+    else {
         console.error("ID utilisateur non trouvé dans le localStorage");
     }
 });
@@ -142,47 +151,74 @@ fetch("http://localhost:3000/u").then(response => {
 });
 
 
+
+
 //Conversation
 const inputWrapper = document.getElementById("input-wrapper");
 const input = document.getElementById("write-bar");
 const sendButton = document.getElementById("send-button");
+let conversations = [];
+
+async function getUserConversations(userId) {
+  if (!userId) {
+    console.error("Aucun ID utilisateur fourni");
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:3000/c/getConvUser/${userId}`);
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des conversations");
+    }
+    const data = await response.json();
+    conversations = data;
+    console.log("Conversations récupérées :", conversations);
+    displayConversation();
+  } catch (error) {
+    console.error("Erreur :", error.message);
+  }
+}
+
+getUserConversations(userId);
+
+function displayConversation(){
+    // Remplir les conversations
+    const conversationList = document.getElementById("conversation-list");
+    conversations.forEach(conv => {
+        const li = document.createElement("li");
+
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("conversation-item");
+
+        const title = document.createElement("span");
+        title.textContent = conv.titre;
+        title.classList.add("conversation-title");
+        title.onclick = () => showConversation(conv);
+
+        const settingsBtn = document.createElement("button");
+        settingsBtn.classList.add("conv-settings-btn");
+
+        const img = document.createElement("img");
+        img.src = "assets/img/settings.png"; 
+        img.alt = "Paramètres";
+        img.classList.add("settings-img");
+
+        settingsBtn.appendChild(img);
+        settingsBtn.onclick = (e) => {
+            e.stopPropagation(); // Empêche le déclenchement de l'ouverture de la conv
+            openConversationSettings(conv);
+        };
+
+        wrapper.appendChild(title);
+        wrapper.appendChild(settingsBtn);
+        li.appendChild(wrapper);
+        conversationList.appendChild(li);
+    });
+}
+
 
 // Variable pour garder une référence de la conversation active
 let activeConversation = null;
-
-// Remplir les conversations
-const conversationList = document.getElementById("conversation-list");
-conversations.forEach(conv => {
-    const li = document.createElement("li");
-
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("conversation-item");
-
-    const title = document.createElement("span");
-    title.textContent = conv.title;
-    title.classList.add("conversation-title");
-    title.onclick = () => showConversation(conv);
-
-    const settingsBtn = document.createElement("button");
-    settingsBtn.classList.add("conv-settings-btn");
-
-    const img = document.createElement("img");
-    img.src = "assets/img/settings.png"; 
-    img.alt = "Paramètres";
-    img.classList.add("settings-img");
-
-    settingsBtn.appendChild(img);
-    settingsBtn.onclick = (e) => {
-        e.stopPropagation(); // Empêche le déclenchement de l'ouverture de la conv
-        openConversationSettings(conv);
-    };
-
-    wrapper.appendChild(title);
-    wrapper.appendChild(settingsBtn);
-    li.appendChild(wrapper);
-    conversationList.appendChild(li);
-});
-
 
 // Remplir les utilisateurs connectés
 const usersList = document.getElementById("users-list");
