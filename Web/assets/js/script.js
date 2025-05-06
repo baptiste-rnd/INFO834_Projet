@@ -225,34 +225,34 @@ connectedUsers.forEach(user => {
 
 let messages = [];
 
-async function getMessagesByConversation(conversationId) {
+async function getMessagesByConversation(conversation,conversationId) {
   try {
     const response = await fetch(`http://localhost:3000/m/conversation/${conversationId}`);
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des messages");
     }
+    let data = await response.json();
+    data = data.filter(msg => msg.conversation === conversationId).map(msg => ({
+        auteur: getSenderNameById(msg.auteur), 
+        contenu: msg.contenu
+      }));
 
-    const data = await response.json();
-
-    conversation.messages = data
-      .filter(msg => msg.conversation === conversationId)
-      .map(msg => ({
-        sender: getSenderNameById(msg.auteur),
-        text: msg.contenu
-    }));
-
-    console.log(messages);
-
+    conversation.messages=data;
   } catch (error) {
     console.error("Erreur :", error.message);
   }
 }
+function getSenderNameById(auteurId) {
+
+    const temp_user = allUsers.find(u => u._id === auteurId);
+    return temp_user ? `${temp_user.username}` : "Inconnu";
+}
 
 // Afficher une conversation
-function showConversation(conversation) {
+async function showConversation(conversation) {
+    await getMessagesByConversation(conversation,conversation._id);
+    console.log(conversation.messages)
 
-    getMessagesByConversation(conversation.id);
-    
     // Mettre à jour la conversation active
     activeConversation = conversation;
 
@@ -282,7 +282,7 @@ function showConversation(conversation) {
         const msgDiv = document.createElement("div");
         const msgDiv_texte = document.createElement("div");
         const senderColor = userColors[msg.auteur] || "#3498db"; // Défaut si non trouvé
-        if (msg.auteur == user.nom) {
+        if (msg.auteur == user.username) {
             msgDiv.classList.add("message-own");
             msgDiv_texte.classList.add("message-texte-own");
             msgDiv_texte.innerHTML = `<p><strong> Moi</strong></p><p>${msg.contenu}</p>`;
@@ -316,7 +316,6 @@ function showConversation(conversation) {
             sendMessage(activeConversation, input);
         }
     }
-
     // S'assurer que l'écran défile en bas
     setTimeout(() => { scrollToBottom(); }, 0);
 }
@@ -325,11 +324,39 @@ function showConversation(conversation) {
 function sendMessage(conversation, input) {
     const messageText = input.value.trim();
     if (messageText !== "") {
+        const nouveauMessage = {
+            auteur: userId, // suppose que user a un champ `_id`
+            contenu: messageText,
+            conversation: conversation._id
+            
+        };
+
+        
         conversation.messages.push({
             auteur: user.nom,
             contenu: messageText
         });
-        console.log("Le message est envoyé à la conversation : ", conversation);
+
+       
+        fetch("http://localhost:3000/m/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(nouveauMessage)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de l'envoi du message");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Message envoyé et enregistré :", data);
+        })
+        .catch(error => {
+            console.error("Erreur lors de l'envoi à l'API :", error);
+        });
 
         // Rafraîchir la vue de la conversation active
         showConversation(conversation);
@@ -338,6 +365,8 @@ function sendMessage(conversation, input) {
         input.value = "";
     }
 }
+
+
 
 // Fonction pour faire défiler jusqu'en bas
 function scrollToBottom() {

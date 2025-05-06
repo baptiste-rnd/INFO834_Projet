@@ -26,13 +26,13 @@ export const getMessageById = async (req, res) => {
 // Créer un nouveau message
 export const createMessage = async (req, res) => {
     try {
-        const { author, content, conversationId } = req.body;
+        const { auteur, contenu, conversation } = req.body;
 
-        if (!author || !content || !conversationId) {
+        if (!auteur || !contenu || !conversation) {
             return res.status(400).json({ error: 'Author, content, and conversationId are required' });
         }
 
-        const newMessage = new Message({ author, content, conversationId });
+        const newMessage = new Message({ auteur, contenu, conversation });
         const savedMessage = await newMessage.save();
         res.status(201).json(savedMessage);
     } catch (error) {
