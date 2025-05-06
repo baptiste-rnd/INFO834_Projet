@@ -476,14 +476,27 @@ function formatDuration(seconds) {
 }
 
 
-document.getElementById("logout-button").addEventListener("click", () => {
-    //appelle api redis
-    // Simule une déconnexion
-    localStorage.removeItem("userId");
-    if (!localStorage.getItem("userId")) {
-        window.location.href = 'connexion.html';
-    } else {
-        console.error("Échec de la suppression du userId.");
+document.getElementById("logout-button").addEventListener("click", async () => {
+    try {
+        // Appel à l'API sur localhost
+        const response = await fetch('http://localhost:3000/u/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })  // Changer password en motDePasse
+        });
+
+        if (response.ok) {
+            localStorage.removeItem("userId");
+            if (!localStorage.getItem("userId")) {
+                window.location.href = 'connexion.html';
+            } else {
+                console.error("Échec de la suppression du userId.");
+            }
+        } else {
+            console.log("Erreur.");
+        }
+    } catch (error) {
+        console.log(error);
     }
 });
 
