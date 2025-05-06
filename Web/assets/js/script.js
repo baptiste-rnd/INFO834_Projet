@@ -32,7 +32,7 @@ let user={};
 async function getUserInfo() {
   if (userId) {
     try {
-      const response = await fetch(`http://localhost:3000/u/${userId}`);
+      const response = await fetch(`/u/${userId}`);
       if (!response.ok) {
         throw new Error("Erreur lors de la récupération de l'utilisateur");
       }
@@ -152,7 +152,7 @@ async function getUserConversations(userId) {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/c/getConvUser/${userId}`);
+    const response = await fetch(`/c/getConvUser/${userId}`);
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des conversations");
     }
@@ -227,7 +227,7 @@ let messages = [];
 
 async function getMessagesByConversation(conversationId) {
   try {
-    const response = await fetch(`http://localhost:3000/m/conversation/${conversationId}`);
+    const response = await fetch(`m/conversation/${conversationId}`);
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des messages");
     }
@@ -507,7 +507,7 @@ function formatDuration(seconds) {
 document.getElementById("logout-button").addEventListener("click", async () => {
     try {
         // Appel à l'API sur localhost
-        const response = await fetch('http://localhost:3000/u/logout', {
+        const response = await fetch('/u/logout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId })  // Changer password en motDePasse

@@ -21,7 +21,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
     try {
         // Appel à l'API sur localhost
-        const response = await fetch('http://localhost:3000/u/login', {
+        const response = await fetch('/u/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, motDePasse })  // Changer password en motDePasse
@@ -66,7 +66,7 @@ document.getElementById('register-form').addEventListener('submit', async functi
     if (verif_password==motDePasse){
         try {
             // Appel à l'API pour créer un nouvel utilisateur
-            const response = await fetch('http://localhost:3000/u/create', {
+            const response = await fetch('/u/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, motDePasse, nom, prenom })  // Vous pouvez ajouter d'autres champs ici
