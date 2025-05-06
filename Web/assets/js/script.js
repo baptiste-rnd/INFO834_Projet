@@ -86,7 +86,7 @@ document.getElementById("save-settings").addEventListener("click", () => {
     // Envoi à l'API
     const userId = localStorage.getItem("userId");
     if (userId) {
-        fetch(`http://localhost:3000/u/update:${userId}`, {
+        fetch(`http://localhost:3000/u/update/${userId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -451,7 +451,11 @@ document.getElementById("logout-button").addEventListener("click", () => {
     //appelle api redis
     // Simule une déconnexion
     localStorage.removeItem("userId");
-    window.location.href = 'connexion.html';
+    if (!localStorage.getItem("userId")) {
+        window.location.href = 'connexion.html';
+    } else {
+        console.error("Échec de la suppression du userId.");
+    }
 });
 
 updateStats();
