@@ -17,7 +17,12 @@ const userSchema = new mongoose.Schema({
     motDePasse: {
         type: String,
         required: true
-    }
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
 }, {
     timestamps: true 
 });
