@@ -10,7 +10,7 @@ router.get('/', getAllMessages);
 router.get('/:id', getMessageById);
 
 // Route pour créer un nouveau message
-router.post('/', createMessage);
+router.post('/createMessage', createMessage);
 
 // Route pour mettre à jour un message existant
 router.put('/:id', updateMessage);

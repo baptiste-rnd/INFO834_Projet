@@ -5,6 +5,14 @@ if (!userId) {
     // Si aucun userId, redirige vers la page de connexion
     window.location.href = 'connexion.html';
 }
+
+const socket = io();
+// Réception d'un message en temps réel
+socket.on('messageReceived', (message) => {
+    console.log('Nouveau message reçu:', message);
+    afficherMessage(message);
+});
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////    Utilisateur connecté Redis               /////////////////////////////////////////////////////////
@@ -380,9 +388,8 @@ function sendMessage(conversation, input) {
             auteur: user.nom,
             contenu: messageText
         });
-
        
-        fetch("/m/", {
+        fetch("/m/createMessage", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -397,13 +404,11 @@ function sendMessage(conversation, input) {
         })
         .then(data => {
             console.log("Message envoyé et enregistré :", data);
+            socket.emit('newMessage', data);
         })
         .catch(error => {
             console.error("Erreur lors de l'envoi à l'API :", error);
         });
-
-        // Rafraîchir la vue de la conversation active
-        showConversation(conversation);
 
         // Vider l'input
         input.value = "";

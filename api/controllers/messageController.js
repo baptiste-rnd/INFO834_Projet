@@ -34,6 +34,7 @@ export const createMessage = async (req, res) => {
 
         const newMessage = new Message({ auteur, contenu, conversation });
         const savedMessage = await newMessage.save();
+        
         res.status(201).json(savedMessage);
     } catch (error) {
         res.status(400).json({ error: error.message });
