@@ -1,10 +1,3 @@
-// Données fictives
-const user = {
-    prenom: "AD",
-    nom: "Laurent",
-    photo: "assets/img/profil.jpg",
-    username: "pupuce"
-};
 const conversations = [
     { id: 1,owner:"pupuce", title: "Projet A",members:["pupuce","louloute","davdav"], messages: [
       { sender: "Alice", text: "Salut, on commence ?" },
@@ -24,38 +17,123 @@ const conversations = [
 ];
   
 const connectedUsers = ["Alice", "Bob", "Eve", "David"];
-const allUsers= [
-    {
-    prenom: "AD",
-    nom: "Laurent",
-    photo: "assets/img/profil.jpg",
-    username: "pupuce"
-    },
-    {
-        prenom: "Alice",
-        nom: "Lejeune",
-        photo: "assets/img/profil.jpg",
-        username: "louloute"
-    },
-    {
-        prenom: "Lelouche",
-        nom: "Bob",
-        photo: "assets/img/profil.jpg",
-        username: "bobi"
-    },
-    {
-        prenom: "AD",
-        nom: "David",
-        photo: "assets/img/profil.jpg",
-        username: "davdav"
-    },
-    {
-        prenom: "AD",
-        nom: "Eve",
-        photo: "assets/img/profil.jpg",
-        username: "evele"
+
+
+//Récupération des infos de l'utilisateurs.
+const userId = localStorage.getItem("userId");
+let user={};
+
+async function getUserInfo() {
+  if (userId) {
+    try {
+      const response = await fetch(`http://localhost:3000/u/${userId}`);
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération de l'utilisateur");
+      }
+      const data = await response.json();
+      user = {
+        nom: data.nom,
+        prenom: data.prenom,
+        username: data.username
+      };
+      display_user_info(); // Appel ici après que user soit rempli
+    } catch (error) {
+      console.error("Erreur :", error.message);
     }
-]
+  } else {
+    console.error("Aucun ID utilisateur trouvé dans le localStorage");
+  }
+}
+
+function display_user_info() {
+  const userInfoDiv = document.getElementById("user-info-texte");
+  userInfoDiv.innerHTML = `
+    <img src="assets/img/profil.png" alt="Photo de profil" class="profile-pic">
+    <div class="user-details">
+        <p class="user-name">${user.prenom} ${user.nom}</p>
+    </div>
+  `;
+}
+
+// Appel de la fonction async au chargement
+getUserInfo();
+
+//Modifier les infos de l'utilisateur
+document.getElementById("toggle-settings").addEventListener("click", () => {
+    document.getElementById("input-nom").value = user.nom;
+    document.getElementById("input-prenom").value = user.prenom;
+    document.getElementById("input-username").value = user.username || "";
+    document.getElementById("settings-panel").classList.toggle("hidden");
+});
+
+// Fermer avec la croix
+document.getElementById("close-settings").addEventListener("click", () => {
+    document.getElementById("settings-panel").classList.add("hidden");
+});
+
+// Sauvegarde
+document.getElementById("save-settings").addEventListener("click", () => {
+    const nom = document.getElementById("input-nom").value.trim();
+    const prenom = document.getElementById("input-prenom").value.trim();
+    const username = document.getElementById("input-username").value.trim();
+
+     // Mise à jour de l'objet user
+    user.nom = nom;
+    user.prenom = prenom;
+    user.username = username;
+
+    display_user_info();
+    // Envoi à l'API
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+        fetch(`http://localhost:3000/u/update:${userId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nom: user.nom,
+            prenom: user.prenom,
+            username: user.username
+        })
+        })
+        .then(response => {
+        if (!response.ok) {
+            throw new Error("Échec de la mise à jour de l'utilisateur");
+        }
+        return response.json();
+        })
+        .then(updatedUser => {
+        console.log("Utilisateur mis à jour :", updatedUser);
+        display_user_info();
+        document.getElementById("settings-panel").classList.add("hidden");
+        })
+        .catch(error => {
+        console.error("Erreur lors de la mise à jour :", error);
+        });
+    } else {
+        console.error("ID utilisateur non trouvé dans le localStorage");
+    }
+});
+
+//Creation de la liste avec tous les utilisateurs
+let allUsers = [];
+
+fetch("http://localhost:3000/u").then(response => {
+        if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des utilisateurs");
+        }
+        return response.json();
+    })
+    .then(data => {
+        allUsers = data;
+        console.log("Utilisateurs récupérés :", allUsers);
+        // Tu peux ici appeler une fonction pour afficher la liste, etc.
+    })
+    .catch(error => {
+        console.error("Erreur API :", error);
+});
+
 
 //Conversation
 const inputWrapper = document.getElementById("input-wrapper");
@@ -294,48 +372,8 @@ document.getElementById("close-conv-settings").addEventListener("click", () => {
 });
 
 
-function display_user_info(){
-    const userInfoDiv = document.getElementById("user-info-texte");
-    userInfoDiv.innerHTML = `
-    <img src="${user.photo}" alt="Photo de profil" class="profile-pic">
-    <div class="user-details">
-        <p class="user-name">${user.prenom} ${user.nom}</p>
-    </div>
-    `;
-}
 
 
-//Modifier les infos de l'utilisateur
-display_user_info();
-
-// Modifier le profil de l'utilisateur
-document.getElementById("toggle-settings").addEventListener("click", () => {
-    document.getElementById("input-nom").value = user.nom;
-    document.getElementById("input-prenom").value = user.prenom;
-    document.getElementById("input-username").value = user.username || "";
-    document.getElementById("settings-panel").classList.toggle("hidden");
-});
-
-// Fermer avec la croix
-document.getElementById("close-settings").addEventListener("click", () => {
-    document.getElementById("settings-panel").classList.add("hidden");
-});
-
-// Sauvegarde
-document.getElementById("save-settings").addEventListener("click", () => {
-    const nom = document.getElementById("input-nom").value.trim();
-    const prenom = document.getElementById("input-prenom").value.trim();
-    const username = document.getElementById("input-username").value.trim();
-
-     // Mise à jour de l'objet user
-    user.nom = nom;
-    user.prenom = prenom;
-    user.username = username;
-
-    display_user_info();
-    // TODO : envoyer à l'API ou mettre à jour l'objet `user`
-    document.getElementById("settings-panel").classList.add("hidden");
-});
 
 
 document.getElementById("toggle-conversation").addEventListener("click", () => {
@@ -410,8 +448,9 @@ function formatDuration(seconds) {
 
 
 document.getElementById("logout-button").addEventListener("click", () => {
-    //appelle api
+    //appelle api redis
     // Simule une déconnexion
+    localStorage.removeItem("userId");
     window.location.href = 'connexion.html';
 });
 
