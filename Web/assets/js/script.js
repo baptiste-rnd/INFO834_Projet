@@ -324,25 +324,25 @@ function openConversationSettings(conv) {
     allUsers.forEach(u => {
         const wrapper = document.createElement("div");
         wrapper.classList.add("member-item");
-
+    
         const isChecked = conv.members.includes(u.username);
-
+    
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.value = u.username;
-
+    
         if (isChecked) {
             checkbox.checked = true;
         }
         if (!isOwner) {
-            // Si non-owner, décocher interdit, cocher interdit
             checkbox.disabled = true;
         }
-
+    
         const label = document.createElement("label");
+        label.classList.add("member-label");
         label.appendChild(checkbox);
         label.append(` ${u.prenom} ${u.nom}`);
-
+    
         wrapper.appendChild(label);
         membersList.appendChild(wrapper);
     });

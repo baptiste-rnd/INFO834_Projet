@@ -125,7 +125,6 @@ h2 {
   padding: 10px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  width: 100%;
 }
 
 .settings-panel button,
@@ -185,6 +184,7 @@ h2 {
 .conversation-item:hover {
   background-color: var(--bg-gray);
 }
+
 
 .conversation-title {
   font-weight: 500;
@@ -262,6 +262,13 @@ h2 {
   margin-right: 8px;
   background-color: #00c853;
   border-radius: 50%;
+}
+
+
+.member-label {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espace entre la checkbox et le nom */
 }
 
 /* Messages */
@@ -417,6 +424,9 @@ h2 {
     width: 90%;
     left: 5%;
   }
+
+
+
 
 
   .settings-panel {
