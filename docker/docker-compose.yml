@@ -1,12 +1,12 @@
 services:
   db:
-    image: mongo:latest
+    build: .
     environment:
-    - MONGO_INITDB_ROOT_USERNAME=root
-    - MONGO_INITDB_ROOT_PASSWORD=password
+    - MONGO_INITDB_ROOT_USERNAME=tcmb
+    - MONGO_INITDB_ROOT_PASSWORD=tcmb-mdp!
     container_name: mongodb
     ports:
-    - "27017:27017"
+    - "28648:27017"
   
   redis:
     image: redis:latest

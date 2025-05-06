@@ -28,7 +28,7 @@ const messageSchema = new mongoose.Schema({
 });
 
 // Création du modèle
-const Message = mongoose.model('Message', messageSchema, 'messages');
+const Message = mongoose.model('Message', messageSchema, 'message');
 
 // Exportation du modèle
 export default Message;

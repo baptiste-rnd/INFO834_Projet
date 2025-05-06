@@ -23,7 +23,7 @@ app.use('/c', conversationRoutes);
 app.use('/m', messageRoutes);
 app.use('/u', userRoute);
 
-const uri = 'mongodb://root:password@db:27017/?authSource=admin';
+const uri = 'mongodb://tcmb:tcmb-mdp!@db:28648/messaging?authSource=admin';
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
