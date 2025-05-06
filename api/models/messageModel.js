@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
     id: {
@@ -27,6 +27,8 @@ const messageSchema = new mongoose.Schema({
     }
 });
 
-const Message = mongoose.model('Message', messageSchema);
+// Création du modèle
+const Message = mongoose.model('Message', messageSchema, 'messages');
 
-module.exports = Message;
+// Exportation du modèle
+export default Message;
