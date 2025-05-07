@@ -45,6 +45,8 @@ db.user.insertMany([
     }
 ]);
 
+print('Utilisateurs créés avec succès!');
+
 // Récupération des ObjectIds des utilisateurs en utilisant leurs usernames
 const corentinId = getUserIdByUsername('corentin.degouey');
 const maxensId = getUserIdByUsername('maxens.soldan');
@@ -110,4 +112,4 @@ const messages = [
 
 // Insertion des conversations dans la base de données
 const result2 = db.message.insertMany(messages);
-print('Conversations créées avec succès:', result2);
+print('Messages créées avec succès:', result2);

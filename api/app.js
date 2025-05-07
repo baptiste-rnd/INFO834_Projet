@@ -30,11 +30,22 @@ app.use('/c', conversationRoutes);
 app.use('/m', messageRoutes);
 app.use('/u', userRoute);
 
-const uri = 'mongodb://tcmb:tcmb-mdp!@db:27017/messaging?authSource=admin';
+const mongoUri = 'mongodb://mongo1:27017,mongo2:27017,mongo3:27017/messaging?replicaSet=rs0&directConnection=false';
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.error('Could not connect to MongoDB', err));
+async function connectWithRetry() {
+  try {
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 20000, // attends 20s au lieu de 10s
+      socketTimeoutMS: 45000,
+    });
+    console.log('✅ MongoDB connected (ReplicaSet)');
+  } catch (err) {
+    console.error('❌ MongoDB connection failed, retrying in 5 seconds...', err);
+    setTimeout(connectWithRetry, 5000);
+  }
+}
+
+connectWithRetry();
 
 // Socket.IO : écouter les événements
 io.on('connection', (socket) => {
