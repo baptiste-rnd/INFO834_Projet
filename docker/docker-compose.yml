@@ -44,14 +44,14 @@ services:
     entrypoint: >
       bash -c "
         echo '⏳ Waiting for MongoDB instances to be ready...';
-        sleep 10;
+        sleep 3;
 
         # Step 1: Initiate ReplicaSet
         echo '🚀 Initiating ReplicaSet...';
         mongosh --host mongo1 --eval 'rs.initiate()';
 
         echo '⏳ Waiting for PRIMARY election...';
-        sleep 10;
+        sleep 3;
 
         # Step 2: Set default RW concern explicitly (this avoids the reconfig error)
         mongosh --host mongo1 --eval '
@@ -79,7 +79,7 @@ services:
         echo '✅ ReplicaSet configured!';
 
         # Step 4: Wait before running init script
-        sleep 10;
+        sleep 3;
 
         # Step 5: Run initialization script
         mongosh --host mongo1 /init-mongo.js;
