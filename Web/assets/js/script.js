@@ -833,6 +833,7 @@ document.getElementById("logout-button").addEventListener("click", async () => {
         if (response.ok) {
             localStorage.removeItem("userId");
             if (!localStorage.getItem("userId")) {
+                socket.emit('userDisconnected', user);
                 window.location.href = 'connexion.html';
             } else {
                 console.error("Échec de la suppression du userId.");

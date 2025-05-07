@@ -38,29 +38,23 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Socket.IO : écouter les événements
 io.on('connection', (socket) => {
-    console.log('Client connecté');
-
-    // Quand un nouveau message est reçu du client
     socket.on('newMessage', (message) => {
-        console.log('Nouveau message reçu du client:', message);
-        // Envoyer à TOUS les clients (y compris celui qui l’a émis)
         io.emit('messageReceived', message);
     });
 
     socket.on('userConnected', (user) => {
-        console.log(`Utilisateur connecté : ${user.username}`);
+        console.log(`User connected : ${user.username}`);
         io.emit('onlineUsersUpdated');
-    }); 
-      
-    // Quand une conv est modifiée ou créée
-    socket.on('NewupdateConv', () => {
-        console.log('Modifications sur les conv:');
-        // Envoyer à TOUS les clients (y compris celui qui l’a émis)
-        io.emit('updateConv');
     });
 
-    socket.on('disconnect', () => {
-        console.log('Client déconnecté');
+    socket.on('userDisconnected', (user) => {
+        console.log(`User disconnected : ${user.username}`);
+        io.emit('onlineUsersUpdated');
+    }); 
+
+    // Quand une conv est modifiée ou créée
+    socket.on('NewupdateConv', () => {
+        io.emit('updateConv');
     });
 });
 
