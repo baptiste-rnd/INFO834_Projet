@@ -47,6 +47,11 @@ io.on('connection', (socket) => {
         io.emit('messageReceived', message);
     });
 
+    socket.on('userConnected', (user) => {
+        console.log(`Utilisateur connecté : ${user.username}`);
+        io.emit('onlineUsersUpdated');
+    }); 
+      
     // Quand une conv est modifiée ou créée
     socket.on('NewupdateConv', () => {
         console.log('Modifications sur les conv:');
