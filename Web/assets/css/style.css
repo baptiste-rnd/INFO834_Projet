@@ -325,7 +325,7 @@ h2 {
   position: relative;
 }
 .messages-container{
-  max-height:83%;
+  max-height:66vh;
   overflow-y: scroll;
   scroll-behavior: smooth;
   position: relative; 

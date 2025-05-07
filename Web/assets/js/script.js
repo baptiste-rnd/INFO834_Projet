@@ -33,7 +33,7 @@ const socket = io();
 socket.on('messageReceived', async (message) => {
     try {
         const conversation = await fetchConversationById(message.conversation);
-
+        updateStats();
         if (!conversation) {
             console.error('Conversation non trouvée');
             return;
@@ -653,7 +653,7 @@ function openConversationSettings(conv) {
         conv.listeMembres = selectedIds;
 
         panel.classList.add("hidden");
-
+        selectedIds.push(userId);//ajout automatique de l'utilisateur 
         try {
             const response = await fetch(`/c/update/${conv._id}`, {
                 method: "PUT",
@@ -808,7 +808,7 @@ async function updateStats() {
             <li><strong>Utilisateur le moins actif :</strong> ${leastActiveUsername}</li>
             <li><strong>Total des messages :</strong> ${totalMessages}</li>
         `;
-
+        fetchAverageConnectionTime(userId);
     } catch (error) {
         console.error("Erreur dans updateStats :", error.message);
         list.innerHTML = `<li>Erreur lors du chargement des statistiques.</li>`;
@@ -883,7 +883,7 @@ document.getElementById("logout-button").addEventListener("click", async () => {
 });
 
 updateStats();
-fetchAverageConnectionTime(userId);
+
 
 
 
