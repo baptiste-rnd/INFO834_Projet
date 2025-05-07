@@ -1,9 +1,19 @@
-// Vérifie si l'utilisateur est connecté
 const userId = localStorage.getItem('userId');
-
 if (userId) {
-    // Si aucun userId, redirige vers la page de connexion
-    window.location.href = '/';
+    fetch(`/u/${userId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Utilisateur non trouvé');
+        }
+        return response.json();
+    })
+    .then(data => {
+        window.location.href = '/';
+    })
+    .catch(error => {
+        console.error('Erreur lors de la vérification de l’utilisateur :', error);
+        localStorage.removeItem('userId');
+    });
 }
 
 function toggleForms() {

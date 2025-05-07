@@ -1,10 +1,32 @@
-// Vérifie si l'utilisateur est connecté
 const userId = localStorage.getItem('userId');
 
-if (!userId) {
-    // Si aucun userId, redirige vers la page de connexion
-    window.location.href = 'connexion.html';
+async function checkUser() {
+    if (!userId) {
+        // Pas d'userId en local → redirection
+        window.location.href = 'connexion.html';
+        return;
+    }
+
+    try {
+        const response = await fetch(`/u/${userId}`);
+
+        if (!response.ok) {
+            // Utilisateur non trouvé → redirection
+            throw new Error('Utilisateur non trouvé');
+        }
+
+        const data = await response.json();
+
+        // Optionnel : tu peux vérifier d'autres infos dans "data" ici
+
+    } catch (error) {
+        console.error('Erreur lors de la vérification :', error);
+        localStorage.removeItem('userId'); // Nettoyage
+        window.location.href = 'connexion.html';
+    }
 }
+
+checkUser();
 
 const socket = io();
 // Réception d'un message en temps réel
