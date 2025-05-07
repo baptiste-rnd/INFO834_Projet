@@ -51,22 +51,6 @@ http://localhost:3000
 
 ---
 
-## 📂 Structure du projet
-
-```
-.
-├── docker-compose.yml
-├── mongo/
-│   └── Dockerfile  # image Mongo personnalisée si besoin
-├── api/
-│   ├── app.js      # serveur Node.js
-│   ├── routes/
-│   └── models/
-└── web/
-    └── index.html  # fichiers statiques
-```
-
----
 
 ## ✅ Astuces utiles
 
