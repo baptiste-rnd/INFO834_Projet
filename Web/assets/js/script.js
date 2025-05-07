@@ -386,6 +386,23 @@ async function showConversation(conversation) {
     const headerDiv = document.createElement("div");
     headerDiv.classList.add("conversation-header");
 
+    // Bouton retour pour mobile (ajouté seulement si largeur <= 768px)
+    if (window.innerWidth <= 768) {
+        const backButton = document.createElement("a");
+        backButton.classList.add("back-button");
+        backButton.title = "Retourner à la liste des conversations";
+        backButton.innerHTML = `<img src="assets/img/back.png" alt="Retour" class="back-icon">`;
+        backButton.href = "#";
+
+        backButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            document.querySelector(".sidebar").style.display = "block";
+            document.querySelector(".content").style.display = "none";
+        });
+
+        headerDiv.appendChild(backButton);
+    }
+
     const title = document.createElement("h3");
     title.textContent = conversation.titre;
     title.classList.add("conversation-title");
@@ -403,6 +420,7 @@ async function showConversation(conversation) {
     // Assembler le header
     headerDiv.appendChild(title);
     headerDiv.appendChild(leaveButton);
+
 
     // L'injecter dans la page
     headerContainer.appendChild(headerDiv);
@@ -937,4 +955,7 @@ function makeDraggable(panelId) {
   makeDraggable("settings-panel");
   makeDraggable("conversation-panel");
   makeDraggable("conv-settings-panel");
+  
+
+
   

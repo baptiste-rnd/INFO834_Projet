@@ -1,6 +1,52 @@
 @media screen and (max-width: 768px) {
-    aside {
+    .main-container {
+      display: block;
+    }
+  
+    .sidebar {
+      width: 100%;
+      height: 100vh;
+    }
+  
+    .content {
+      display: none;
+      width: 100%;
+    }
+  
+    .main-container.mobile-view aside.sidebar {
+      display: none;
+    }
+  
+    .main-container.mobile-view .content {
+      display: block;
+    }
+  
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+
+    .input-wrapper{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .messages-container{
+        max-height: 74vh;
+    }
+
+    .users-bar{
         display: none;
     }
-    
-}
+
+    .back-icon{
+        display: block;
+    }
+  }
+  
