@@ -58,16 +58,21 @@ socket.on('onlineUsersUpdated', () => {
     console.log('Maj des utilisateurs en ligne');
     fetchOnlineUsers();
 });
-
-
-
-
-
 async function fetchConversationById(conversationId) {
     const response = await fetch(`/c/${conversationId}`);
     const data = await response.json();
     return data;
 }
+
+//Modification ou creation de conversations
+socket.on('updateConv', async () => {
+    try {
+        getUserConversations(userId);
+
+    } catch (error) {
+        console.error('Erreur lors de la récupération de la conversation:', error);
+    }
+});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -520,7 +525,33 @@ async function leaveConversation(conversationId) {
         console.log("Départ confirmé :", result);
 
         alert("Vous avez quitté la conversation.");
-        displayConversation(userId);    
+        getUserConversations(userId);    
+        socket.emit('NewupdateConv');
+        // Réinitialiser l'affichage de la conversation
+        const conversationDetail = document.querySelector(".conversation-detail");
+        conversationDetail.innerHTML = "";
+        conversationDetail.innerHTML = `
+        <div class="title_leave_conversation">
+            <div id="conversation-header">
+                <h3 id="conversation-title">Sélectionnez une conversation</h3>
+            </div>
+        </div>
+        <div class="messages-container" id="messages-container"></div>
+        <div class="input-wrapper hidden" id="input-wrapper">
+            <input
+            type="text"
+            id="write-bar"
+            name="write-bar"
+            placeholder="Écrivez un message..."
+            class="write-bar"
+            />
+            <button class="send-button" id="send-button">Envoyer</button>
+        </div>
+        `;
+
+        // Réinitialiser la conversation active
+        activeConversation = null;
+
     } catch (error) {
         console.error("Erreur :", error.message);
         alert("Impossible de quitter la conversation.");
@@ -638,6 +669,7 @@ function openConversationSettings(conv) {
 
             const updatedConv = await response.json();
             console.log("Conversation mise à jour :", updatedConv);
+            socket.emit('NewupdateConv');
 
         } catch (error) {
             console.error("Erreur :", error.message);
@@ -690,7 +722,7 @@ document.getElementById("save-conversation").addEventListener("click", async () 
 
         const newConv = await response.json();
         console.log("Conversation créée :", newConv);
-
+        socket.emit('NewupdateConv'); 
         document.getElementById("conversation-panel").classList.add("hidden");
     } catch (error) {
         console.error("Erreur :", error.message);
