@@ -182,6 +182,17 @@ h2 {
   padding: 10px 8px;
   border-radius: 8px;
   transition: background 0.2s;
+  position: relative;
+}
+.conversation-item.unread::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
 }
 
 .conversation-item:hover {

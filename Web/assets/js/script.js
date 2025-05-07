@@ -8,18 +8,30 @@ if (!userId) {
 
 const socket = io();
 // Réception d'un message en temps réel
-socket.on('messageReceived', async (message) => {  // Ajoute async ici
+socket.on('messageReceived', async (message) => {
     try {
-        const conversation = await fetchConversationById(message.conversation);  // Utilise await pour attendre la réponse
-        if (conversation) {
-            showConversation(conversation);  // Passe la conversation à la fonction
-        } else {
+        const conversation = await fetchConversationById(message.conversation);
+
+        if (!conversation) {
             console.error('Conversation non trouvée');
+            return;
         }
+
+        // Si la conversation active est affichée à l'écran
+        if (activeConversation && activeConversation._id === conversation._id) {
+            showConversation(conversation);  // Actualiser la vue
+        } else {
+            const convDiv = document.querySelector(`[data-conversation-id="${conversation._id}"]`);
+            if (convDiv) {
+                convDiv.classList.add("unread");
+            }
+        }
+
     } catch (error) {
         console.error('Erreur lors de la récupération de la conversation:', error);
     }
 });
+
 
 async function fetchConversationById(conversationId) {
     const response = await fetch(`/c/${conversationId}`);
@@ -37,7 +49,6 @@ async function fetchOnlineUsers() {
     try {
         const response = await fetch('/u/online'); 
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
             displayOnlineUsers(data.onlineUsers);
         } else {
@@ -183,7 +194,6 @@ async function getAllUsers(){
     })
     .then(data => {
         allUsers = data;
-        console.log("Utilisateurs récupérés :", allUsers);
         // Tu peux ici appeler une fonction pour afficher la liste, etc.
     })
     .catch(error => {
@@ -252,6 +262,7 @@ function displayConversation(){
 
         const wrapper = document.createElement("div");
         wrapper.classList.add("conversation-item");
+        wrapper.setAttribute("data-conversation-id", conv._id);
 
         const title = document.createElement("span");
         title.textContent = conv.titre;
@@ -313,6 +324,12 @@ function getSenderNameById(auteurId) {
 async function showConversation(conversation) {
     await getMessagesByConversation(conversation,conversation._id);
     (conversation.messages)
+
+    //enleve la notif
+    const convDiv = document.querySelector(`[data-conversation-id="${conversation._id}"]`);
+    if (convDiv) {
+        convDiv.classList.remove("unread");
+    }
 
     // Mettre à jour la conversation active
     activeConversation = conversation;
