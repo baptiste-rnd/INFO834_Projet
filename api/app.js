@@ -47,6 +47,11 @@ io.on('connection', (socket) => {
         io.emit('messageReceived', message);
     });
 
+    socket.on('userConnected', (user) => {
+        console.log(`Utilisateur connecté : ${user.username}`);
+        io.emit('onlineUsersUpdated');
+    });    
+
     socket.on('disconnect', () => {
         console.log('Client déconnecté');
     });

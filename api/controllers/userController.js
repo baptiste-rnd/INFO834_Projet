@@ -86,7 +86,7 @@ export const loginUser = async (req, res) => {
         await redisClient.set(`login:start:${user._id}`, now); // pour mesurer le temps
 
 
-        res.status(200).json({ success: true, id: user._id });
+        res.status(200).json({ success: true, id: user._id, username: user.username });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la tentative de connexion', error });
     }

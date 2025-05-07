@@ -54,6 +54,14 @@ socket.on('messageReceived', async (message) => {
     }
 });
 
+socket.on('onlineUsersUpdated', () => {
+    console.log('Maj des utilisateurs en ligne');
+    fetchOnlineUsers();
+});
+
+
+
+
 
 async function fetchConversationById(conversationId) {
     const response = await fetch(`/c/${conversationId}`);

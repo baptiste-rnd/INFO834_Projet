@@ -22,6 +22,11 @@ function toggleForms() {
     clearError(); 
 }
 
+const socket = io();
+
+function onLoginSuccess(user) {
+    socket.emit('userConnected', user);
+}
   
 document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault(); 
@@ -43,6 +48,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
             // Enregistrer l'ID de l'utilisateur dans le localStorage
             localStorage.setItem('userId', userId);
             // Si OK, rediriger vers la page d'accueil
+            onLoginSuccess(data);
             window.location.href = 'index.html';
         } else {
             // Sinon afficher erreur
