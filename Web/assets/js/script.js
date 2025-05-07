@@ -245,9 +245,6 @@ getAllUsers();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Conversation
-const inputWrapper = document.getElementById("input-wrapper");
-const input = document.getElementById("write-bar");
-const sendButton = document.getElementById("send-button");
 let conversations = [];
 
 async function getUserConversations(userId) {
@@ -357,7 +354,11 @@ function getSenderNameById(auteurId) {
 
 // Afficher une conversation
 async function showConversation(conversation) {
-    await getMessagesByConversation(conversation, conversation._id);
+    const inputWrapper = document.getElementById("input-wrapper");
+    const input = document.getElementById("write-bar");
+    const sendButton = document.getElementById("send-button");
+    await getMessagesByConversation(conversation,conversation._id);
+    (conversation.messages)
 
     // Retirer le style actif de toutes les conversations
     const allConvDivs = document.querySelectorAll("[data-conversation-id]");
