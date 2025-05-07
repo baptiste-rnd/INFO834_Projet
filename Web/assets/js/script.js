@@ -245,9 +245,6 @@ getAllUsers();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Conversation
-const inputWrapper = document.getElementById("input-wrapper");
-const input = document.getElementById("write-bar");
-const sendButton = document.getElementById("send-button");
 let conversations = [];
 
 async function getUserConversations(userId) {
@@ -357,6 +354,9 @@ function getSenderNameById(auteurId) {
 
 // Afficher une conversation
 async function showConversation(conversation) {
+    const inputWrapper = document.getElementById("input-wrapper");
+    const input = document.getElementById("write-bar");
+    const sendButton = document.getElementById("send-button");
     await getMessagesByConversation(conversation,conversation._id);
     (conversation.messages)
 
