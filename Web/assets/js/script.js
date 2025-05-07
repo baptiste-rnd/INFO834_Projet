@@ -61,6 +61,17 @@ async function fetchConversationById(conversationId) {
     return data;
 }
 
+
+// Réception d'un message en temps réel
+socket.on('updateConv', async () => {
+    try {
+        getUserConversations(userId);
+
+    } catch (error) {
+        console.error('Erreur lors de la récupération de la conversation:', error);
+    }
+});
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////    Utilisateur connecté Redis               /////////////////////////////////////////////////////////
@@ -512,7 +523,7 @@ async function leaveConversation(conversationId) {
         console.log("Départ confirmé :", result);
 
         alert("Vous avez quitté la conversation.");
-        displayConversation(userId);    
+        socket.emit('NewupdateConv');    
     } catch (error) {
         console.error("Erreur :", error.message);
         alert("Impossible de quitter la conversation.");
@@ -605,6 +616,8 @@ function openConversationSettings(conv) {
             return user ? user._id : null;
         }).filter(id => id !== null); 
 
+        selectedIds.push(userId);//ajout automatique de l'utilisateur 
+
         conv.title = nameInput.value;
         conv.description = descInput.value;
         conv.listeMembres = selectedIds;
@@ -630,6 +643,7 @@ function openConversationSettings(conv) {
 
             const updatedConv = await response.json();
             console.log("Conversation mise à jour :", updatedConv);
+            socket.emit('NewupdateConv');    
 
         } catch (error) {
             console.error("Erreur :", error.message);
@@ -682,7 +696,7 @@ document.getElementById("save-conversation").addEventListener("click", async () 
 
         const newConv = await response.json();
         console.log("Conversation créée :", newConv);
-
+        socket.emit('NewupdateConv');    
         document.getElementById("conversation-panel").classList.add("hidden");
     } catch (error) {
         console.error("Erreur :", error.message);

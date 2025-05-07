@@ -47,6 +47,13 @@ io.on('connection', (socket) => {
         io.emit('messageReceived', message);
     });
 
+    // Quand une conv est modifiée ou créée
+    socket.on('NewupdateConv', () => {
+        console.log('Modifications sur les conv:');
+        // Envoyer à TOUS les clients (y compris celui qui l’a émis)
+        io.emit('updateConv');
+    });
+
     socket.on('disconnect', () => {
         console.log('Client déconnecté');
     });
