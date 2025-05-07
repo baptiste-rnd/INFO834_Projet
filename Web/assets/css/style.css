@@ -308,11 +308,16 @@ h2 {
   margin-bottom: 40px;
   font-weight: bold;
 }
+
+
 .leave-button {
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 .leave-icon{
   height: 24px;
