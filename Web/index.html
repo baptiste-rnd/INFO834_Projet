@@ -154,7 +154,7 @@ document.addEventListener("click", (e) => {
   // Comportement responsive pour le bouton "Quitter la conversation"
   if (e.target.closest(".leave-button")) {
     if (window.innerWidth <= 768) {
-      document.querySelector(".sidebar").style.display = "block";
+      document.querySelector(".sidebar").style.display = "flex";
       document.querySelector(".content").style.display = "none";
     }
   }

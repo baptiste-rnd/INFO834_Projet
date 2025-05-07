@@ -396,7 +396,7 @@ async function showConversation(conversation) {
 
         backButton.addEventListener("click", (e) => {
             e.preventDefault();
-            document.querySelector(".sidebar").style.display = "block";
+            document.querySelector(".sidebar").style.display = "flex";
             document.querySelector(".content").style.display = "none";
         });
 
