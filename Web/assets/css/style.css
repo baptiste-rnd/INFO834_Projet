@@ -164,7 +164,7 @@ h2 {
 #conversation-list{
   flex:1;
   overflow-y:scroll;
-  max-height: 45vh;
+  max-height: 43vh;
 }
 
 .active-conversation {
