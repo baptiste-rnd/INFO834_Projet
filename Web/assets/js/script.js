@@ -523,7 +523,32 @@ async function leaveConversation(conversationId) {
         console.log("Départ confirmé :", result);
 
         alert("Vous avez quitté la conversation.");
-        socket.emit('NewupdateConv');    
+        socket.emit('NewupdateConv');
+        // Réinitialiser l'affichage de la conversation
+        const conversationDetail = document.querySelector(".conversation-detail");
+
+        conversationDetail.innerHTML = `
+        <div class="title_leave_conversation">
+            <div id="conversation-header">
+                <h3 id="conversation-title">Sélectionnez une conversation</h3>
+            </div>
+        </div>
+        <div class="messages-container" id="messages-container"></div>
+        <div class="input-wrapper hidden" id="input-wrapper">
+            <input
+            type="text"
+            id="write-bar"
+            name="write-bar"
+            placeholder="Écrivez un message..."
+            class="write-bar"
+            />
+            <button class="send-button" id="send-button">Envoyer</button>
+        </div>
+        `;
+
+        // Réinitialiser la conversation active
+        activeConversation = null;
+
     } catch (error) {
         console.error("Erreur :", error.message);
         alert("Impossible de quitter la conversation.");
