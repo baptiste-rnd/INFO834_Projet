@@ -360,32 +360,36 @@ async function showConversation(conversation) {
     await getMessagesByConversation(conversation,conversation._id);
     (conversation.messages)
 
-    //enleve la notif
+    // Retirer le style actif de toutes les conversations
+    const allConvDivs = document.querySelectorAll("[data-conversation-id]");
+    allConvDivs.forEach(div => {
+        div.classList.remove("active-conversation"); // classe CSS à définir pour le style actif
+    });
+
+    // Appliquer le style actif à la conversation cliquée
     const convDiv = document.querySelector(`[data-conversation-id="${conversation._id}"]`);
     if (convDiv) {
         convDiv.classList.remove("unread");
+        convDiv.classList.add("active-conversation");
     }
 
     // Mettre à jour la conversation active
     activeConversation = conversation;
 
-    // Afficher le champ de saisie et le bouton "Envoyer" uniquement pour cette conversation
+    // Afficher le champ de saisie et le bouton "Envoyer"
     inputWrapper.classList.remove("hidden");
 
-    // Cible le conteneur où afficher le header de conversation
+    // Mettre à jour l'en-tête de la conversation
     const headerContainer = document.getElementById("conversation-header");
-    headerContainer.innerHTML = ""; // Reset du contenu précédent
+    headerContainer.innerHTML = "";
 
-    // Crée la div principale du header
     const headerDiv = document.createElement("div");
     headerDiv.classList.add("conversation-header");
 
-    // Titre de la conversation
     const title = document.createElement("h3");
     title.textContent = conversation.titre;
     title.classList.add("conversation-title");
 
-    // Bouton pour quitter avec une icône
     const leaveButton = document.createElement("button");
     leaveButton.classList.add("leave-button");
     leaveButton.title = "Quitter la conversation";

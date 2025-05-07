@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 :root {
-  --main-blue: #051a39;
+  --main-blue: #002f76;
   --light-blue: #4874ae;
   --bg-gray: #f5f7fa;
   --border-color: #e0e0e0;
@@ -166,6 +166,12 @@ h2 {
   overflow-y:scroll;
   max-height: 45vh;
 }
+
+.active-conversation {
+  background-color: #dedede;
+}
+
+
 .new-conv-button {
   background: none;
   border: none;
@@ -196,10 +202,6 @@ h2 {
   height: 10px;
   background-color: red;
   border-radius: 50%;
-}
-
-.conversation-item:hover {
-  background-color: var(--bg-gray);
 }
 
 
@@ -337,22 +339,35 @@ h2 {
   flex-direction: column;
  
 }
-.message-texte, .message-texte-own{
-  max-width: 70%; 
-  width:fit-content;
-  background-color: #353a3f;
-  border-radius:0.4rem ;
-  padding: 0.4rem;
-  word-wrap: break-word;         
+.message-texte,
+.message-texte-own {
+  max-width: 70%;
+  width: fit-content;
+  padding: 0.6rem 1rem;
+  margin: 0.3rem 0;
+  border-radius: 2rem;
+  word-wrap: break-word;
   overflow-wrap: break-word;
-  white-space: pre-wrap; 
-  color:white; 
-  
+  white-space: pre-wrap;
+  color: white;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
-.message-texte-own {
-  background-color: #1365b6;      
+/* Messages des autres */
+.message-texte {
+  background-color: #002f76;
+  border-bottom-left-radius: 0;
+  align-self: flex-start;
 }
+
+/* Messages de l'utilisateur */
+.message-texte-own {
+  background-color: #0056b3;
+  border-bottom-right-radius: 0;
+  align-self: flex-end;
+}
+
 .message-own{
   margin-right:15px;
   margin-bottom: 15px;
@@ -376,9 +391,9 @@ h2 {
 
 .write-bar {
   flex: 1;
-  padding: 10px;
+  padding: 15px 20px;
   font-size: 15px;
-  border-radius: 6px;
+  border-radius: 2rem 0 0 2rem;
   border: 1px solid var(--border-color);
 }
 
@@ -387,7 +402,7 @@ h2 {
   color: white;
   padding: 10px 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 0 2rem 2rem 0;
   cursor: pointer;
 }
 
