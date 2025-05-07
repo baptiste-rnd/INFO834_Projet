@@ -1,0 +1,24 @@
+Date de séance : 07/05/2025
+
+Membres présents :
+RENAND Baptiste
+SOLDAN Maxens
+DEGOUEY Corentin
+BERCIER Thomas
+
+Travail réalisé lors de la séance :
+- Integration de sockets pour pas avoir besoin de reload 
+- Refonte du css et responsive 
+- Création replicaset avec Docker
+
+Répartition des tâches :
+- Corentin, Baptiste: sockets 
+- Maxens : css et responsive
+- Baptiste : Replicaset sur docker
+
+Travail à réaliser pour la prochaine séance :
+- Rédaction du rapport
+- Reussir a connecter les replicasets
+
+Problèmes rencontrés : 
+-impossible d'inserer des données dans mongo a la creation car seul le primary server peut ecrire et l'election ne se fait pas 
