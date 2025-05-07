@@ -206,10 +206,14 @@ h2 {
 
 
 .conversation-title {
-  font-weight: 500;
   flex: 1;
-  font-weight: bold;
+  font-weight: 500;
+  white-space: nowrap;        /* Empêche le retour à la ligne */
+  overflow: hidden;           /* Cache le texte qui dépasse */
+  text-overflow: ellipsis;    /* Affiche "..." à la fin */
+  max-width: 75%;
 }
+
 
 .conv-settings-btn {
   background: none;
