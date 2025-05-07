@@ -50,7 +50,14 @@ io.on('connection', (socket) => {
     socket.on('userConnected', (user) => {
         console.log(`Utilisateur connecté : ${user.username}`);
         io.emit('onlineUsersUpdated');
-    });    
+    }); 
+      
+    // Quand une conv est modifiée ou créée
+    socket.on('NewupdateConv', () => {
+        console.log('Modifications sur les conv:');
+        // Envoyer à TOUS les clients (y compris celui qui l’a émis)
+        io.emit('updateConv');
+    });
 
     socket.on('disconnect', () => {
         console.log('Client déconnecté');
