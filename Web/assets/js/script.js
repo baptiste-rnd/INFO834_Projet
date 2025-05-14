@@ -43,10 +43,18 @@ socket.on('messageReceived', async (message) => {
         if (activeConversation && activeConversation._id === conversation._id) {
             showConversation(conversation);  // Actualiser la vue
         } else {
+             const index = conversations.findIndex(conv => conv._id === conversation._id);
+                if (index > -1) {
+                    const [conv] = conversations.splice(index, 1); // Retire la conv
+                    conversations.unshift(conv); // La place en tête
+                    displayConversation(); // Recharge l'affichage
+                }
             const convDiv = document.querySelector(`[data-conversation-id="${conversation._id}"]`);
             if (convDiv) {
+                
                 convDiv.classList.add("unread");
             }
+            
         }
 
     } catch (error) {
