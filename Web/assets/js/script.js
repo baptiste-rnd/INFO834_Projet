@@ -73,7 +73,10 @@ async function fetchConversationById(conversationId) {
 socket.on('updateConv', async () => {
     try {
         getUserConversations(userId);
-
+        // Vérifie si la conversation active existe encore dans les conversations
+        if (!conversations.includes(activeConversation)) {
+            updateConversationAffichage(); // On met à jour l'affichage si nécessaire
+        }
     } catch (error) {
         console.error('Erreur lors de la récupération de la conversation:', error);
     }
@@ -553,7 +556,19 @@ async function leaveConversation(conversationId) {
         alert("Vous avez quitté la conversation.");
         getUserConversations(userId);    
         socket.emit('NewupdateConv');
-        // Réinitialiser l'affichage de la conversation
+        updateConversationAffichage();
+        
+
+        
+
+    } catch (error) {
+        console.error("Erreur :", error.message);
+        alert("Impossible de quitter la conversation.");
+    }
+}
+
+function updateConversationAffichage(){
+    // Réinitialiser l'affichage de la conversation
         const conversationDetail = document.querySelector(".conversation-detail");
         conversationDetail.innerHTML = "";
         conversationDetail.innerHTML = `
@@ -574,17 +589,9 @@ async function leaveConversation(conversationId) {
             <button class="send-button" id="send-button">Envoyer</button>
         </div>
         `;
-
         // Réinitialiser la conversation active
         activeConversation = null;
-
-    } catch (error) {
-        console.error("Erreur :", error.message);
-        alert("Impossible de quitter la conversation.");
-    }
 }
-
-
 // Fonction pour faire défiler jusqu'en bas
 function scrollToBottom() {
     const container = document.getElementById("messages-container");
