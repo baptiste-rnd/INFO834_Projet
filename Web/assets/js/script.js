@@ -58,6 +58,11 @@ socket.on('onlineUsersUpdated', () => {
     console.log('Maj des utilisateurs en ligne');
     fetchOnlineUsers();
 });
+
+socket.on('UsersUpdated', () => {
+    getAllUsers();
+});
+
 async function fetchConversationById(conversationId) {
     const response = await fetch(`/c/${conversationId}`);
     const data = await response.json();
@@ -229,7 +234,6 @@ async function getAllUsers(){
     })
     .then(data => {
         allUsers = data;
-        // Tu peux ici appeler une fonction pour afficher la liste, etc.
     })
     .catch(error => {
         console.error("Erreur API :", error);

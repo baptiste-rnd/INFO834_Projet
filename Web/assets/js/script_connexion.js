@@ -27,6 +27,10 @@ const socket = io();
 function onLoginSuccess(user) {
     socket.emit('userConnected', user);
 }
+
+function onCreateSuccess(user) {
+    socket.emit('userCreated', user);
+}
   
 document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault(); 
@@ -91,8 +95,33 @@ document.getElementById('register-form').addEventListener('submit', async functi
                 const data = await response.json();
                 console.log('Utilisateur créé avec succès:', data);
                 alert('Utilisateur créé avec succès');
-                // Rediriger vers la page de connexion ou autre page après la création
-                window.location.href = 'connexion.html';
+                onCreateSuccess(data);
+
+                try {
+                    // Appel à l'API sur localhost
+                    const response = await fetch('/u/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, motDePasse })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const userId = data.id; 
+                        // Enregistrer l'ID de l'utilisateur dans le localStorage
+                        localStorage.setItem('userId', userId);
+                        // Si OK, rediriger vers la page d'accueil
+                        onLoginSuccess(data);
+                        window.location.href = 'index.html';
+                    } else {
+                        // Sinon afficher erreur
+                        const data = await response.json();
+                        showError(data.message || "Identifiants incorrects.");
+                    }
+                } catch (error) {
+                    showError("Erreur de connexion au serveur.");
+                }
+
             } else {
                 const data = await response.json();
                 showError(data.message || 'Erreur lors de la création de l\'utilisateur.');

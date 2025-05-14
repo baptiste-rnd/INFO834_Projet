@@ -58,6 +58,11 @@ io.on('connection', (socket) => {
         io.emit('onlineUsersUpdated');
     });
 
+    socket.on('userCreated', (user) => {
+        console.log(`User created : ${user.username}`);
+        io.emit('UsersUpdated');
+    });
+
     socket.on('userDisconnected', (user) => {
         console.log(`User disconnected : ${user.username}`);
         io.emit('onlineUsersUpdated');
